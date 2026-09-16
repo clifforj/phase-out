@@ -30,5 +30,4 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST }}
           username: deploy
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          fingerprint: ${{ secrets.DEPLOY_HOST_FINGERPRINT }}
           script: /opt/phase-out/deploy.sh
