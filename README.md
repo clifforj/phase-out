@@ -1,4 +1,15 @@
-# Phase Out
+<p align="center">
+  <img src="web/public/icons/logo-192.png" width="96" height="96" alt="Phase Out logo">
+</p>
+
+<p align="center">
+  <a href="https://github.com/clifforj/phase-out/actions/workflows/build-and-push.yml"><img src="https://github.com/clifforj/phase-out/actions/workflows/build-and-push.yml/badge.svg" alt="Build and push images"></a>
+  <a href="https://github.com/clifforj/phase-out/pkgs/container/phase-out%2Fgame"><img src="https://img.shields.io/badge/ghcr.io-game-blue?logo=docker" alt="Game image on GHCR"></a>
+  <a href="https://github.com/clifforj/phase-out/pkgs/container/phase-out%2Fweb"><img src="https://img.shields.io/badge/ghcr.io-web-blue?logo=docker" alt="Web image on GHCR"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/clifforj/phase-out" alt="License"></a>
+</p>
+
+<h1 align="center">Phase Out</h1>
 
 Play Magic: The Gathering in your browser, with rules enforced by
 [XMage](https://github.com/magefree/mage). Create a Commander table, invite other
@@ -19,9 +30,6 @@ docker compose -p phase-out-local -f docker-compose.yml -f docker-compose.images
 docker compose -p phase-out-local -f docker-compose.yml -f docker-compose.images.yml up -d --no-build
 ```
 
-In PowerShell, use `Copy-Item .env.example .env`. The contact address is already
-baked into the prebuilt web image; local build settings are not needed to run it.
-
 Open [localhost:8081](http://localhost:8081). Startup takes a little longer on
 the first run while XMage prepares its card database. Local ports bind to
 loopback, and sign-in is disabled by default.
@@ -40,7 +48,7 @@ ports 8080 and 8081 before starting this one.
 
 ## Development and tests
 
-Install Git and Node.js 22.22.3+ (or 24.15+). Clone with
+Requires Node.js 22.22.3+ (or 24.15+). Clone with
 `git clone --recurse-submodules <repository-url>` and copy `.env.example` to
 `.env`. Allow Docker at least 6 GB of memory for compiling XMage.
 
@@ -122,8 +130,7 @@ the game container interrupts games.
 
 ## Build data
 
-`vendor/xmage` is a submodule pinned to commit
-`bb9895f947872753145ecbc2a7af9da2d9e6b0cd`. After a plain clone, initialise it
+`vendor/xmage` is a submodule pinned to a commit. After a plain clone, initialise it
 with `git submodule update --init --recursive`. To update XMage, fetch upstream and
 check out the intended release in `vendor/xmage`, then regenerate and test:
 
@@ -197,7 +204,7 @@ See [GitHub's container registry documentation](https://docs.github.com/en/packa
 
 Select `Deploy after publishing` to deploy on a successful build, or run
 `Deploy` separately. Create a GitHub environment (default: `production`) with
-`DEPLOY_HOST`, `DEPLOY_SSH_KEY`, and `DEPLOY_HOST_FINGERPRINT` secrets.
+`DEPLOY_HOST` and `DEPLOY_SSH_KEY`.
 The host needs a `deploy` user able to run Docker and the script above.
 Restrict its authorized key to `/opt/phase-out/deploy.sh` with port forwarding,
 agent forwarding, X11 forwarding, and PTY allocation disabled. The script pulls
@@ -206,9 +213,16 @@ roll back to a specific build.
 
 ## Credits
 
-Phase Out uses XMage, Angular, three.js, Lucide, and Mana Font. Card metadata
-and artwork come from Scryfall; the generated starter pool uses
-[taw/magic-preconstructed-decks-data](https://github.com/taw/magic-preconstructed-decks-data).
+Phase Out is built on:
+
+- [XMage](https://github.com/magefree/mage) — rules engine
+- [Angular](https://github.com/angular/angular) — web client framework
+- [three.js](https://github.com/mrdoob/three.js) — 3D board rendering
+- [Lucide](https://github.com/lucide-icons/lucide) — icons
+- [Mana Font](https://github.com/andrewgioia/mana) — mana and set symbols
+- [Scryfall](https://scryfall.com/) — card metadata and artwork
+- [taw/magic-preconstructed-decks-data](https://github.com/taw/magic-preconstructed-decks-data) — generated starter pool
+
 Upstream projects retain their own licenses and notices.
 
 Magic: The Gathering is owned by Wizards of the Coast. Phase Out is an
