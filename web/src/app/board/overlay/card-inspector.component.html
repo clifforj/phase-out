@@ -1,0 +1,57 @@
+<app-sheet
+  [ariaLabel]="name()"
+  [width]="48"
+  maxHeight="min(88vh, 44rem)"
+  gap="0.6rem"
+  padding="0.9rem 1.1rem 1.1rem"
+  [zIndex]="6"
+  (close)="close.emit()"
+>
+  <app-sheet-header [centered]="true" (close)="close.emit()">
+    <div sheet-title class="title">
+      <h2>
+        @if (commander()) {
+          <span class="crown" title="commander">♛</span>
+        }
+        {{ name() }}
+      </h2>
+      <p class="type">{{ placement().card.typeLine }}</p>
+    </div>
+    @if (placement().card.manaCost) {
+      <app-mana-cost class="cost" [cost]="placement().card.manaCost" />
+    }
+  </app-sheet-header>
+
+  <div class="body">
+    <app-card-preview [card]="placement().card" [permanent]="placement().permanent" />
+
+    <div class="facts">
+      <dl>
+        @for (fact of facts(); track fact.label) {
+          <div class="fact">
+            <dt>{{ fact.label }}</dt>
+            <dd>{{ fact.value }}</dd>
+          </div>
+        }
+      </dl>
+
+      @if (artist(); as name) {
+        <app-artist-credit [name]="name" [size]="12" />
+      }
+
+      @if (rules().length) {
+        <div class="rules">
+          @for (rule of rules(); track $index) {
+            <p><app-mana-text [text]="rule" /></p>
+          }
+        </div>
+      }
+
+      @if (stats()) {
+        <div class="stats">{{ stats() }}</div>
+      }
+    </div>
+  </div>
+
+  <app-fan-disclaimer />
+</app-sheet>

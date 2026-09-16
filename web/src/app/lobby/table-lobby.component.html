@@ -1,0 +1,90 @@
+<app-void-scene [wide]="true">
+  <app-logo [size]="40" />
+
+  @if (table(); as t) {
+    <div class="say">
+      <h1>{{ t.name }}</h1>
+      <p>{{ t.state }}</p>
+    </div>
+
+    <div class="seats">
+      @for (seat of t.seats; track $index) {
+        <div class="seat" [class.filled]="!!seat.playerName" [class.you]="isMe(seat)">
+          @if (seat.playerName) {
+            <app-avatar [name]="seat.playerName" [size]="36" [fontSize]="14" />
+            <span class="name-badge">
+              <span class="who">{{ seat.playerName }}</span>
+              @if (isMe(seat)) {
+                <span class="badge badge-violet">You</span>
+              } @else {
+                <span class="badge">{{ seat.playerType }}</span>
+              }
+            </span>
+            @if (isMe(seat)) {
+              <div class="deck-pick">
+                @if (myDeck(); as deck) {
+                  <app-mana-pips [deck]="deck" [size]="10" />
+                  <span class="deck-name">{{ deck.name }}</span>
+                } @else {
+                  <app-mana-pips [colors]="[]" [size]="10" />
+                  <span class="deck-name muted">Dealt from the pool</span>
+                }
+              </div>
+            } @else if (seat.deck; as deck) {
+              <div class="deck-pick">
+                <app-mana-pips [deck]="deck" [size]="10" />
+                <span class="deck-name">{{ deck.name }}</span>
+              </div>
+            }
+          } @else {
+            <app-avatar name="?" [empty]="true" [size]="36" />
+            <span class="who muted">Open seat</span>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="share">
+      <span class="field-label">Share this with the other players</span>
+      <div class="row">
+        <code>{{ tableId() }}</code>
+        <button type="button" class="btn btn-ghost btn-small" (click)="copyLink()">
+          {{ copied() ? 'Copied' : 'Copy link' }}
+        </button>
+      </div>
+    </div>
+
+    <p class="hint">
+      @if (t.stateCode === 'READY_TO_START') {
+        @if (isOwner()) {
+          Every seat is filled - start whenever you're ready.
+        } @else {
+          Every seat is filled - waiting for {{ t.controllerName }} to start.
+        }
+      } @else {
+        Waiting for every seat to fill before the match can start.
+      }
+    </p>
+
+    <div class="actions">
+      <button type="button" class="btn btn-quiet" (click)="leave()">Leave table</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="t.stateCode !== 'READY_TO_START' || !isOwner()"
+        [title]="
+          t.stateCode !== 'READY_TO_START'
+            ? 'every seat has to be filled first'
+            : !isOwner()
+              ? 'only ' + t.controllerName + ' can start this match'
+              : ''
+        "
+        (click)="start()"
+      >
+        Start match
+      </button>
+    </div>
+  } @else {
+    <p class="muted">Looking for this table…</p>
+  }
+</app-void-scene>

@@ -1,0 +1,19 @@
+.git
+.idea
+.env
+.env.*
+tmp
+build
+accounts
+decks-imported
+playmat-images
+
+# Keep mage/target source packages; exclude only Maven output directories.
+vendor/xmage/*/target
+vendor/xmage/*/*/target
+bridge/build
+bridge/.gradle
+web/node_modules
+web/dist
+web/.angular
+vendor/xmage/.git

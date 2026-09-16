@@ -1,0 +1,38 @@
+<div class="panel panel-flat row" [class.chosen]="chosen()" (click)="play.emit()">
+  @if (art(); as url) {
+    <img class="thumb" [src]="url" [alt]="commanders()" />
+  } @else {
+    <span class="thumb" [style.background]="wash()" aria-hidden="true"></span>
+  }
+  <div class="row-id">
+    <h3>{{ deck().name }}</h3>
+    <p>
+      {{ commanders() || 'No general listed' }}
+      @if (artist(); as name) {
+        · {{ name }}
+      }
+    </p>
+  </div>
+  <app-mana-pips [deck]="deck()" [size]="13" />
+  <span class="row-when">
+    @if (tab() === 'mine') {
+      @if (deck().savedAt; as savedAt) {
+        {{ ago(savedAt) }}
+      }
+    } @else if (tab() === 'ready') {
+      Precon
+    }
+  </span>
+  <a
+    class="btn btn-quiet btn-small"
+    [routerLink]="['/decks', deck().deckId]"
+    (click)="$event.stopPropagation()"
+  >
+    View
+  </a>
+  @if (chosen()) {
+    <span class="chosen-pill">Playing this</span>
+  } @else {
+    <button type="button" class="btn btn-ghost btn-small" (click)="play.emit()">Play this</button>
+  }
+</div>

@@ -1,0 +1,36 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.view {
+  flex: 1;
+  min-height: 0;
+}
+
+.connecting {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.halt {
+  max-width: 42rem;
+  margin: 3rem auto;
+  padding: 1.2rem 1.4rem;
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-card);
+  background: var(--panel);
+}
+
+.halt h1 {
+  margin: 0 0 0.4rem;
+  color: var(--danger);
+  font-size: 1.2rem;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 0.78rem;
+}

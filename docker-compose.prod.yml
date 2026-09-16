@@ -1,0 +1,21 @@
+services:
+  game:
+    ports: !reset []
+    environment:
+      BRIDGE_AUTH_MODE: required
+      BRIDGE_GOOGLE_CLIENT_ID: ${BRIDGE_GOOGLE_CLIENT_ID:?set it in .env}
+      BRIDGE_AUTH_SECRET: ${BRIDGE_AUTH_SECRET:?set it in .env — openssl rand -base64 32}
+      BRIDGE_ALLOWED_EMAILS: ${BRIDGE_ALLOWED_EMAILS:-}
+      BRIDGE_JAVA_OPTS: -Xmx256m
+
+  web:
+    ports: !reset []
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate --protocol http2 run
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:?set it in .env — the connector token from the Zero Trust dashboard}
+    depends_on:
+      - web
+    restart: unless-stopped

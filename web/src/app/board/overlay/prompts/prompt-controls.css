@@ -1,0 +1,60 @@
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+button {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-small);
+  background: var(--glass-control);
+  color: var(--fg);
+  font: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition:
+    border-color 150ms ease,
+    background 150ms ease;
+}
+
+button::first-letter {
+  text-transform: uppercase;
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--glass-hover);
+}
+
+button:disabled {
+  color: var(--muted);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+button.primary {
+  border-color: transparent;
+  background: var(--portal);
+  color: #fff;
+  font-weight: 600;
+}
+
+button.primary:hover:not(:disabled) {
+  border-color: transparent;
+  filter: brightness(1.1);
+}
+
+button.secondary {
+  color: var(--muted);
+}
+
+input[type='number'] {
+  width: 4rem;
+  padding: 0.2rem 0.35rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--bg);
+  color: var(--fg);
+}

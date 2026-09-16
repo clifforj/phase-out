@@ -1,0 +1,78 @@
+<div
+  class="tile"
+  [class.tapped]="permanent()?.tapped && !upright()"
+  [class.face-down]="card().faceDown"
+  [class.token]="card().isToken"
+  [class.playable]="playable()"
+  [class.compact]="compact()"
+  [style.background]="tint()"
+  [title]="tooltip()"
+>
+  @if (artUrl(); as url) {
+    <img class="art" [src]="url" [alt]="card().name" />
+  }
+
+  <div class="head">
+    <span class="name">{{ displayName() }}</span>
+    @if (card().manaCost) {
+      <app-mana-cost class="cost" [cost]="card().manaCost" />
+    }
+  </div>
+
+  @if (card().icons.length) {
+    <div class="icons">
+      @for (icon of card().icons; track icon.type + icon.text) {
+        <span class="icon" [class]="'icon-' + icon.type" [title]="icon.hint">
+          @if (iconClass(icon.type); as manaClass) {
+            <i class="ms" [class]="manaClass" aria-hidden="true"></i>
+          } @else {
+            {{ iconGlyph(icon.type) }}
+          }
+          {{ icon.text }}
+        </span>
+      }
+    </div>
+  }
+
+  @if (card().typeLine) {
+    <div class="type">{{ card().typeLine }}</div>
+  }
+
+  @if (!compact() && card().rules.length) {
+    <div class="rules" [class.expanded]="expanded()" (click)="toggleRules($event)">
+      @for (rule of card().rules; track $index) {
+        <p><app-mana-text [text]="stripTags(rule)" /></p>
+      }
+    </div>
+  }
+
+  <div class="foot">
+    @if (statLine(); as stats) {
+      <span class="stats">{{ stats }}</span>
+    }
+    @if (permanent()?.damage) {
+      <span class="damage" title="damage marked this turn">-{{ permanent()!.damage }}</span>
+    }
+    @for (counter of card().counters; track counter.name) {
+      <span class="counter" [title]="counter.name">
+        @if (counterIconClass(counter.name); as cls) {
+          <i class="ms" [class]="cls" aria-hidden="true"></i>
+          @if (counter.count > 1) {
+            {{ counter.count }}
+          }
+        } @else {
+          {{ counterLabel(counter.count, counter.name) }}
+        }
+      </span>
+    }
+    @if (permanent()?.attachments?.length) {
+      <span class="attached" title="attachments">+{{ permanent()!.attachments.length }}</span>
+    }
+    @if (card().isToken) {
+      <span class="badge">token</span>
+    }
+    @if (permanent()?.tapped) {
+      <span class="badge">tapped</span>
+    }
+  </div>
+</div>

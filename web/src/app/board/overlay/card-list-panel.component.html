@@ -1,0 +1,76 @@
+<app-sheet [ariaLabel]="heading()" (close)="close.emit()">
+  <app-sheet-header [icon]="icon()" [heading]="heading()" [count]="count()" (close)="close.emit()">
+    @if (chosenTargetIds().size) {
+      <button
+        type="button"
+        class="sheet-button"
+        (click)="clearChosen()"
+        title="deselect everything picked so far"
+      >
+        clear picks ({{ chosenTargetIds().size }})
+      </button>
+    }
+  </app-sheet-header>
+
+  @if (rows().length) {
+    <div class="body" [class.no-ordinal]="!showOrdinal()">
+      <ol class="list" (pointerleave)="hovered.set(null)">
+        @for (row of rows(); track row.card.objectId) {
+          <li>
+            <button
+              type="button"
+              class="row"
+              [class.on]="row.card.objectId === shown()?.card.objectId"
+              [class.selectable]="selectableIds().has(row.card.objectId)"
+              [class.targeted]="chosenTargetIds().has(row.card.objectId)"
+              [style.borderLeftColor]="row.stripe"
+              [attr.aria-current]="row.card.objectId === shown()?.card.objectId"
+              (pointerenter)="hovered.set(row.card.objectId)"
+              (focus)="hovered.set(row.card.objectId)"
+              (blur)="hovered.set(null)"
+              (click)="rowClicked(row.card.objectId)"
+            >
+              @if (showOrdinal()) {
+                <span class="ordinal">{{ row.ordinal }}</span>
+              }
+              <span class="name">
+                {{ row.name }}
+                @if (row.commander) {
+                  <span class="crown" title="commander">♛</span>
+                }
+              </span>
+              <app-mana-cost class="cost" [cost]="row.cost" />
+              <span class="type">{{ row.type }}</span>
+              <span class="stats">{{ row.stats }}</span>
+            </button>
+          </li>
+        }
+      </ol>
+
+      <div class="preview">
+        @if (shown(); as row) {
+          <app-card-preview [card]="row.card" />
+          @if (showOrdinal()) {
+            <p class="meta">{{ row.ordinal }} of {{ rows().length }} from the top</p>
+          }
+          @if (row.printing) {
+            <p class="meta">{{ row.printing }}</p>
+          }
+        }
+      </div>
+    </div>
+    <p class="hint">
+      @if (orderHint()) {
+        {{ orderHint() }} ·
+      }
+      hover or click a row to read it
+      @if (selectableIds().size) {
+        · highlighted rows are legal targets - click one to choose it
+      }
+    </p>
+  } @else {
+    <p class="empty">{{ emptyMessage() }}</p>
+  }
+
+  <app-fan-disclaimer />
+</app-sheet>

@@ -1,0 +1,136 @@
+:host {
+  display: block;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.42rem;
+  font-size: 0.85rem;
+}
+
+.cap {
+  color: var(--muted);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.stops {
+  position: relative;
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+  margin: 0;
+  padding: 0.56rem 0 0;
+  list-style: none;
+}
+
+.stop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: color-mix(in srgb, var(--muted) 34%, transparent);
+  transition:
+    color 260ms ease,
+    transform 260ms ease,
+    filter 260ms ease,
+    background-color 260ms ease,
+    box-shadow 260ms ease;
+}
+
+.stop.opens:not(:first-child) {
+  margin-left: 0.34rem;
+}
+
+.stop.done {
+  color: color-mix(in srgb, var(--muted) 70%, transparent);
+}
+
+.stop.major {
+  padding: 0.16rem;
+  background: color-mix(in srgb, var(--line) 55%, transparent);
+  color: color-mix(in srgb, var(--muted) 70%, transparent);
+}
+
+.stop.major.done {
+  color: var(--muted);
+}
+
+.stop.now {
+  color: var(--accent);
+  transform: scale(1.22);
+  filter: drop-shadow(0 0 0.28rem color-mix(in srgb, var(--accent) 55%, transparent));
+}
+
+.stop.major.now {
+  transform: scale(1.18);
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
+.timeline.mine .stop.now {
+  color: var(--playable);
+  filter: drop-shadow(0 0 0.3rem color-mix(in srgb, var(--playable) 55%, transparent));
+}
+
+.timeline.mine .stop.major.now {
+  background: color-mix(in srgb, var(--playable) 22%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--playable) 70%, transparent);
+}
+
+.stop svg {
+  display: block;
+  width: 0.85rem;
+  height: 0.85rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.stop.major svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  stroke-width: 1.4;
+}
+
+.stop svg .solid {
+  fill: currentColor;
+  stroke: none;
+}
+
+.track {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: 1px;
+  background: var(--accent);
+  transition: width 300ms ease;
+}
+
+.timeline.mine .fill {
+  background: var(--playable);
+}
+
+.step {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.68rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

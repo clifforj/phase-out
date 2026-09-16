@@ -1,0 +1,126 @@
+<header class="head">
+  <div>
+    <h1 class="page-title">Decks</h1>
+    <p class="page-lead">
+      The deck you take to the next table. Applies to tables created or joined
+      <strong>after</strong> you pick.
+    </p>
+  </div>
+  <button type="button" class="btn btn-primary" (click)="importing.set(true)">Import Deck</button>
+</header>
+
+<div class="controls">
+  <div class="filters">
+    <input
+      type="text"
+      class="field search"
+      placeholder="Search decks"
+      aria-label="search decks"
+      [value]="search()"
+      (input)="search.set($any($event.target).value)"
+    />
+    <div class="identity" role="group" aria-label="filter by colour identity">
+      @for (chip of identityChoices; track chip) {
+        <button
+          type="button"
+          class="chip"
+          [class.on]="identity().has(chip)"
+          [attr.aria-pressed]="identity().has(chip)"
+          [attr.title]="chip === 'C' ? 'Colourless' : chip"
+          (click)="toggleIdentity(chip)"
+        >
+          <span class="pip" [class]="'pip-' + chip"></span>
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="views">
+    <button
+      type="button"
+      class="view"
+      title="Card view"
+      aria-label="card view"
+      [class.on]="effectiveView() === 'card'"
+      [disabled]="filtering()"
+      (click)="prefs.deckView.set('card')"
+    >
+      <span class="i-grid" aria-hidden="true"> <i></i><i></i><i></i><i></i> </span>
+    </button>
+    <button
+      type="button"
+      class="view"
+      [title]="filtering() ? 'List view (forced while filtering)' : 'List view'"
+      aria-label="list view"
+      [class.on]="effectiveView() === 'list'"
+      [disabled]="filtering()"
+      (click)="prefs.deckView.set('list')"
+    >
+      <span class="i-list" aria-hidden="true"> <i></i><i></i><i></i> </span>
+    </button>
+  </div>
+</div>
+
+@if (filtering() && !filtered().length) {
+  <div class="panel panel-flat empty">
+    <h3>No decks match</h3>
+    <p>Try a different search, or clear the colour filter.</p>
+    <button type="button" class="btn btn-ghost" (click)="clearFilters()">Clear filters</button>
+  </div>
+} @else if (effectiveView() === 'card') {
+  <div class="grid">
+    @if (mine().length) {
+      <h2 class="section-title shelf-heading" [class.stacked]="!filtering()">My Decks</h2>
+      @for (item of mine(); track item.deck.deckId) {
+        <app-deck-card
+          [deck]="item.deck"
+          [tab]="item.tab"
+          [chosen]="decks.selectedDeckId() === item.deck.deckId"
+          (play)="play(item.deck.deckId)"
+        />
+      }
+    }
+
+    <h2 class="section-title shelf-heading" [class.stacked]="!filtering() || mine().length > 0">
+      Ready to Play
+    </h2>
+    @for (item of ready(); track item.deck.deckId) {
+      <app-deck-card
+        [deck]="item.deck"
+        [tab]="item.tab"
+        [chosen]="decks.selectedDeckId() === item.deck.deckId"
+        (play)="play(item.deck.deckId)"
+      />
+    }
+  </div>
+} @else {
+  <div class="rows">
+    @if (mine().length) {
+      <h2 class="section-title shelf-heading" [class.stacked]="!filtering()">My Decks</h2>
+      @for (item of mine(); track item.deck.deckId) {
+        <app-deck-row
+          [deck]="item.deck"
+          [tab]="item.tab"
+          [chosen]="decks.selectedDeckId() === item.deck.deckId"
+          (play)="play(item.deck.deckId)"
+        />
+      }
+    }
+
+    <h2 class="section-title shelf-heading" [class.stacked]="!filtering() || mine().length > 0">
+      Ready to Play
+    </h2>
+    @for (item of ready(); track item.deck.deckId) {
+      <app-deck-row
+        [deck]="item.deck"
+        [tab]="item.tab"
+        [chosen]="decks.selectedDeckId() === item.deck.deckId"
+        (play)="play(item.deck.deckId)"
+      />
+    }
+  </div>
+}
+
+@if (importing()) {
+  <app-import-deck (close)="importing.set(false)" />
+}

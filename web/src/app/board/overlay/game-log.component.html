@@ -1,0 +1,42 @@
+<app-sheet
+  ariaLabel="Game log"
+  [width]="34"
+  maxHeight="min(80vh, 42rem)"
+  [zIndex]="4"
+  (close)="close.emit()"
+>
+  <app-sheet-header
+    glyph="❧"
+    [accentGlyph]="true"
+    heading="Game log"
+    [count]="count()"
+    (close)="close.emit()"
+  >
+    @if (paused()) {
+      <button type="button" class="sheet-button on" (click)="resume()">follow again</button>
+    }
+  </app-sheet-header>
+
+  <ol #scroller (scroll)="onScroll()">
+    @for (line of lines(); track line.id) {
+      <li [class.status]="line.kind === 'STATUS'">
+        @if (line.turnInfo) {
+          <span class="turn">{{ line.turnInfo }}</span>
+        }
+        <span class="text"><app-mana-text [text]="line.text" /></span>
+        @if (line.repeats > 1) {
+          <span
+            class="repeats"
+            title="the engine logged this line {{ line.repeats }} times in a row"
+            >×{{ line.repeats }}</span
+          >
+        }
+      </li>
+    }
+    @if (!lines().length) {
+      <li class="empty">Nothing logged yet. The engine narrates every event here as it happens.</li>
+    }
+  </ol>
+
+  <p class="hint">the engine's own words, oldest first · scroll up to stop it following</p>
+</app-sheet>

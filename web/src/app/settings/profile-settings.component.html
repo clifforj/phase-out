@@ -1,0 +1,85 @@
+<section class="panel stack">
+  <div>
+    <span class="field-label" id="name-label">Name at a table</span>
+    <input
+      type="text"
+      class="field"
+      maxlength="40"
+      aria-labelledby="name-label"
+      [value]="playerNameField()"
+      (input)="editedPlayerName.set($any($event.target).value)"
+      (blur)="savePlayerName()"
+    />
+    <p class="hint">What other players see. Change it any time.</p>
+  </div>
+
+  <div>
+    <span class="field-label">Avatar</span>
+    <div class="swatches" role="radiogroup" aria-label="avatar colour">
+      @for (hue of hues; track hue) {
+        <button
+          type="button"
+          role="radio"
+          class="swatch"
+          [class.on]="activeHue() === hue"
+          [attr.aria-checked]="activeHue() === hue"
+          [attr.aria-label]="'avatar colour ' + hue"
+          (click)="prefs.avatarHue.set(hue)"
+        >
+          <app-avatar
+            [name]="avatarName()"
+            [hue]="hue"
+            [size]="36"
+            [fontSize]="12"
+            [selectable]="true"
+          />
+        </button>
+      }
+    </div>
+    <p class="hint">
+      Only saved in this browser, not shared with other players.
+      @if (prefs.avatarHue() !== null) {
+        <button type="button" class="btn btn-quiet" (click)="prefs.avatarHue.set(null)">
+          Back to the one my name picks
+        </button>
+      }
+    </p>
+  </div>
+
+  <app-playmat-settings />
+
+  <div>
+    <span class="field-label" id="email-label">Email</span>
+    <input
+      type="text"
+      class="field"
+      readonly
+      aria-labelledby="email-label"
+      [value]="email() ?? 'not signed in with Google'"
+    />
+  </div>
+
+  <div class="status-row">
+    <div class="status-id">
+      <span class="google" aria-hidden="true">G</span>
+      <span>Google account</span>
+    </div>
+    @if (auth.account()) {
+      <span class="badge badge-green">Connected</span>
+    } @else {
+      <span class="badge">Guest</span>
+    }
+  </div>
+
+  @if (auth.authMode() === 'required') {
+    <div class="status-row">
+      <div>
+        <div class="row-label">Sign out</div>
+        <p class="row-note">Signs out this browser; your decks are kept.</p>
+      </div>
+      <button type="button" class="btn btn-ghost btn-danger" (click)="store.signOut()">
+        Log out
+      </button>
+    </div>
+  }
+</section>

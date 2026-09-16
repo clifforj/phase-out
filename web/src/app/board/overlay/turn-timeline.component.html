@@ -1,0 +1,77 @@
+<div class="timeline" [class.mine]="activeIsMe()">
+  <ol
+    class="stops"
+    [attr.aria-label]="(round() ? 'round ' + round() + ', ' : '') + 'turn ' + turn() + ' progress'"
+  >
+    <span class="track" aria-hidden="true">
+      <span class="fill" [style.width.%]="progress()"></span>
+    </span>
+    @for (stop of stops; track stop.id; let i = $index) {
+      <li
+        class="stop"
+        [class.done]="i < index()"
+        [class.now]="i === index()"
+        [class.opens]="stop.opensGroup"
+        [class.major]="stop.major"
+        [attr.aria-current]="i === index() ? 'step' : null"
+        [title]="stop.label"
+      >
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          @switch (stop.id) {
+            @case ('untap') {
+              <path d="M8 2.6A5.4 5.4 0 1 1 4.2 4.2" />
+              <path class="solid" d="M8 0.4L10.9 2.6L8 4.8Z" />
+            }
+            @case ('upkeep') {
+              <path d="M2 12.4H14" />
+              <path d="M4.6 12.4a3.4 3.4 0 0 1 6.8 0" />
+              <path d="M8 6.6V4.2" />
+            }
+            @case ('draw') {
+              <path d="M5 7h6a1 1 0 0 1 1 1v5.4a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z" />
+              <path d="M8 5.2V1.6" />
+              <path d="M5.8 3.6L8 1.4L10.2 3.6" />
+            }
+            @case ('combat') {
+              <path d="M4.6 1.8V14.2" />
+              <path d="M4.6 3L12.6 5.8L4.6 8.6Z" />
+            }
+            @case ('attackers') {
+              <path d="M13.4 2.6L5.2 10.8" />
+              <path d="M3.8 9.4L6.6 12.2" />
+              <path d="M2.4 13.6L4.6 11.4" />
+            }
+            @case ('blockers') {
+              <path d="M8 1.8L13.4 3.9v4.5c0 3.2-2.4 5.3-5.4 6.1c-3-0.8-5.4-2.9-5.4-6.1V3.9Z" />
+            }
+            @case ('damage') {
+              <path d="M8 1.4V14.6" />
+              <path d="M1.4 8H14.6" />
+              <path d="M4.5 4.5L11.5 11.5" />
+              <path d="M11.5 4.5L4.5 11.5" />
+            }
+            @case ('end') {
+              <path d="M4.2 2.2H11.8" />
+              <path d="M4.2 13.8H11.8" />
+              <path d="M4.6 2.2L11.4 13.8" />
+              <path d="M11.4 2.2L4.6 13.8" />
+            }
+            @default {
+              <path d="M8 2.2L13.8 8L8 13.8L2.2 8Z" />
+            }
+          }
+        </svg>
+      </li>
+    }
+  </ol>
+
+  @if (stepLabel(); as label) {
+    <span class="step">
+      @if (phaseLabel(); as phase) {
+        <span class="cap">{{ phase }}</span
+        >&ngsp;
+      }
+      {{ label }}
+    </span>
+  }
+</div>

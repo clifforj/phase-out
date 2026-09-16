@@ -1,0 +1,76 @@
+.row {
+  grid-template-columns: 1.4rem minmax(0, 1fr) auto minmax(0, 9rem) 2.6rem;
+}
+
+.no-ordinal .row {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 9rem) 2.6rem;
+}
+
+.row.selectable {
+  border-color: var(--actionable);
+}
+
+.row.selectable:hover,
+.row.selectable:focus-visible {
+  background: color-mix(in srgb, var(--actionable) 16%, transparent);
+}
+
+.row.targeted {
+  border-color: var(--actionable);
+  background: color-mix(in srgb, var(--actionable) 24%, transparent);
+}
+
+.ordinal {
+  color: var(--muted);
+  font-size: 0.62rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.crown {
+  color: var(--commander);
+}
+
+.type,
+.stats {
+  color: var(--muted);
+  font-size: 0.65rem;
+}
+
+.type {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.stats {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.cost {
+  gap: 0.08rem;
+  font-size: 0.85rem;
+}
+
+.empty {
+  margin: 1rem 0 1.4rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+@media (max-width: 40rem) {
+  .row {
+    grid-template-columns: 1.4rem minmax(0, 1fr) auto 2.6rem;
+  }
+
+  .no-ordinal .row {
+    grid-template-columns: minmax(0, 1fr) auto 2.6rem;
+  }
+
+  .type {
+    display: none;
+  }
+}

@@ -1,0 +1,63 @@
+<app-sheet ariaLabel="Order your triggered abilities" [dismissible]="false">
+  <app-sheet-header
+    [icon]="icon"
+    heading="Order your triggered abilities"
+    [count]="count()"
+    closeTitle="close"
+    (close)="close.emit()"
+  />
+
+  <p class="lede">
+    Highest in the list resolves first. Click a trigger to put it next in the order; click a
+    numbered one to take it back out.
+  </p>
+
+  <div class="body">
+    <ol class="list" (pointerleave)="hovered.set(null)">
+      @for (row of rows(); track row.card.objectId) {
+        <li>
+          <button
+            type="button"
+            class="row"
+            [class.on]="row.card.objectId === shown()?.card.objectId"
+            [class.placed]="row.place !== null"
+            [class.next]="row.isNext"
+            [style.borderLeftColor]="row.stripe"
+            [attr.aria-current]="row.card.objectId === shown()?.card.objectId"
+            (pointerenter)="hovered.set(row.card.objectId)"
+            (focus)="hovered.set(row.card.objectId)"
+            (blur)="hovered.set(null)"
+            (click)="toggle(row.card.objectId)"
+          >
+            <span class="badge">{{ row.badge }}</span>
+            <span class="name">{{ row.name }}</span>
+            <span class="text">{{ row.text }}</span>
+            <span class="note">{{ row.note }}</span>
+          </button>
+        </li>
+      }
+    </ol>
+
+    <div class="preview">
+      @if (shown(); as row) {
+        <app-card-preview [card]="row.card" />
+      }
+    </div>
+  </div>
+
+  <footer>
+    <p class="summary">{{ summary() }}</p>
+    <span class="spacer"></span>
+    <button
+      type="button"
+      class="sheet-button ghost"
+      [disabled]="!order().length"
+      (click)="order.set([])"
+    >
+      start over
+    </button>
+    <button type="button" class="confirm" [disabled]="!complete()" (click)="confirm()">
+      confirm this order
+    </button>
+  </footer>
+</app-sheet>

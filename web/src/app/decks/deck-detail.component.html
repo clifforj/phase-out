@@ -1,0 +1,144 @@
+@if (detail(); as deck) {
+  <div class="layout">
+    <aside class="rail">
+      <a routerLink="/decks" class="back">
+        <span class="back-icon" aria-hidden="true">←</span> Decks
+      </a>
+
+      <header class="head">
+        <h1 class="page-title">{{ deck.name }}</h1>
+      </header>
+
+      @for (card of commanders(); track card.setCode + card.cardNumber) {
+        @if (commanderKey(card) === expandedCommanderKey()) {
+          <div class="commander">
+            <div class="commander-art" (click)="openCard(card)">
+              @if (art(card); as url) {
+                <img [src]="url" [alt]="card.name" />
+              } @else {
+                <span class="no-art" aria-hidden="true">{{ card.name.charAt(0) }}</span>
+              }
+            </div>
+            <div class="commander-info">
+              <span class="crown-label">Commander</span>
+              <h2 class="commander-name">{{ card.name }}</h2>
+            </div>
+          </div>
+        } @else {
+          <button type="button" class="commander-collapsed" (click)="expandCommander(card)">
+            <span class="crown-label">Commander</span>
+            <span class="commander-name">{{ card.name }}</span>
+          </button>
+        }
+      }
+
+      @if (commanders().length) {
+        <div class="identity" [attr.aria-label]="identityLabel()">
+          @for (symbol of identitySymbols(); track symbol.code) {
+            <app-mana-symbol [symbol]="symbol" />
+          }
+        </div>
+      }
+
+      @if (summary(); as s) {
+        @if (decks.selectedDeckId() === s.deckId) {
+          <span class="chosen-pill">Playing this</span>
+        } @else {
+          <button type="button" class="btn btn-primary" (click)="decks.selectDeck(s.deckId)">
+            Play this
+          </button>
+        }
+        @if (isBuiltIn()) {
+          <p class="page-lead">Precon</p>
+        } @else if (s.savedAt) {
+          <p class="page-lead">Updated {{ ago(s.savedAt) }}</p>
+        }
+      }
+
+      @if (!isBuiltIn()) {
+        <button type="button" class="btn btn-quiet delete" (click)="confirmingDelete.set(true)">
+          Delete deck
+        </button>
+      }
+    </aside>
+
+    <div class="list">
+      @for (shelf of shelves(); track shelf.category) {
+        <section class="shelf">
+          <h3 class="shelf-title">
+            {{ shelf.category }} <span class="shelf-count">{{ shelf.count }}</span>
+          </h3>
+          <div class="rows">
+            @for (card of shelf.cards; track card.setCode + card.cardNumber + card.name) {
+              <button type="button" class="row" (click)="openCard(card)">
+                <span class="row-thumb">
+                  @if (art(card, 'crop'); as url) {
+                    <img [src]="url" [alt]="card.name" loading="lazy" />
+                  } @else {
+                    <span class="no-art" aria-hidden="true">{{ card.name.charAt(0) }}</span>
+                  }
+                </span>
+                <span class="row-text">
+                  <span class="row-name">{{ card.name }}</span>
+                  @if (artist(card); as name) {
+                    <app-artist-credit class="row-artist" [name]="name" [size]="10" />
+                  }
+                </span>
+                <app-mana-cost class="row-cost" [cost]="card.manaCost" />
+                @if (card.amount > 1) {
+                  <span class="row-amount">×{{ card.amount }}</span>
+                }
+              </button>
+            }
+          </div>
+        </section>
+      }
+    </div>
+  </div>
+} @else if (pending()) {
+  <a routerLink="/decks" class="back">
+    <span class="back-icon" aria-hidden="true">←</span> Decks
+  </a>
+  <p class="status">Loading…</p>
+} @else {
+  <a routerLink="/decks" class="back">
+    <span class="back-icon" aria-hidden="true">←</span> Decks
+  </a>
+  <p class="status">
+    Couldn't find that deck. It may have been deleted, or belong to a different account.
+  </p>
+}
+
+@if (viewing(); as card) {
+  <app-dialog [width]="520" (dismiss)="closeCard()">
+    <div class="modal-art">
+      @if (art(card); as url) {
+        <img [src]="url" [alt]="card.name" />
+      } @else {
+        <span class="no-art" aria-hidden="true">{{ card.name.charAt(0) }}</span>
+      }
+    </div>
+    @if (artist(card); as name) {
+      <div class="modal-body">
+        <app-artist-credit class="modal-artist" [name]="name" [size]="13" />
+      </div>
+    }
+    <app-fan-disclaimer class="modal-disclaimer" />
+  </app-dialog>
+}
+
+@if (confirmingDelete()) {
+  <app-dialog
+    heading="Delete deck?"
+    [lead]="'Delete ' + (detail()?.name ?? 'this deck') + '. There is no undo.'"
+    [width]="400"
+    (dismiss)="confirmingDelete.set(false)"
+  >
+    <div class="delete-actions">
+      <button type="button" class="btn btn-outline" (click)="confirmingDelete.set(false)">
+        Cancel
+      </button>
+      <button type="button" class="btn btn-danger" (click)="deleteDeck()">Delete</button>
+    </div>
+  </app-dialog>
+}

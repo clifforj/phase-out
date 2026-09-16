@@ -1,0 +1,96 @@
+<section class="games">
+  <div class="games-head">
+    <div>
+      <h2 class="section-title">Open Games</h2>
+      <p class="section-lead">Commander pods open for players right now.</p>
+    </div>
+
+    <div class="lobby-tools">
+      <span class="status" [class.bad]="store.status() === 'halted'">
+        @switch (store.status()) {
+          @case ('open') {
+            connected
+            @if (store.tablesFetchedAt(); as at) {
+              · listed {{ ago(at) }}
+            }
+          }
+          @case ('halted') {
+            stopped: {{ store.transportError() }}
+          }
+          @default {
+            {{ store.status() }}…
+          }
+        }
+      </span>
+      <label class="poll">
+        <input type="checkbox" [checked]="polling()" (change)="togglePolling($event)" />
+        poll every {{ pollSeconds }}s
+      </label>
+      <button
+        type="button"
+        class="btn btn-quiet"
+        [disabled]="!store.loggedIn()"
+        (click)="store.refreshTables()"
+      >
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  @if (!store.tables().length) {
+    <p class="panel empty">
+      No open rooms. <strong>Create Room</strong> opens one for other players to find, or
+      <strong>Play vs AI</strong>
+    </p>
+  } @else {
+    <div class="rooms">
+      @for (table of store.tables(); track table.tableId) {
+        <article class="panel room" [class.live]="watchable(table)">
+          <div class="room-head">
+            <app-avatar [name]="table.controllerName" [size]="30" />
+            <div class="room-id">
+              <h3>{{ table.name }}</h3>
+              <p>{{ table.controllerName }}</p>
+            </div>
+            <span class="badge badge-amber">Commander</span>
+          </div>
+
+          <div class="room-meta">
+            <span class="badge" [class.badge-green]="!table.passworded">
+              {{ table.passworded ? 'Password' : 'Open' }}
+            </span>
+            <span class="state">{{ table.state }}</span>
+          </div>
+
+          <div class="room-foot">
+            <span class="seats-count">
+              {{ filled(table) }} / {{ table.seats.length }} players
+            </span>
+            @if (watchable(table)) {
+              <button type="button" class="btn btn-ghost btn-small" (click)="watch(table)">
+                Watch
+              </button>
+            } @else if (joinable(table)) {
+              <button type="button" class="btn btn-ghost btn-small" (click)="join(table)">
+                Join
+              </button>
+            } @else {
+              <button
+                type="button"
+                class="btn btn-ghost btn-small"
+                disabled
+                [title]="reason(table)"
+              >
+                Join
+              </button>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>
+
+@if (pendingJoin()) {
+  <app-join-confirm [deck]="pendingDeck()" (confirm)="confirmJoin()" (cancel)="cancelJoin()" />
+}

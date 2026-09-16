@@ -1,0 +1,8 @@
+@font-face {
+  font-family: 'Mana';
+  src:
+    url('../../node_modules/mana-font/fonts/mana.woff2') format('woff2'),
+    url('../../node_modules/mana-font/fonts/mana.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}

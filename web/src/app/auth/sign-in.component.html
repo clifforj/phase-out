@@ -1,0 +1,65 @@
+<app-void-scene>
+  <app-logo [size]="60" />
+
+  @if (auth.sessionConflictStep() === 'asking') {
+    <div class="say">
+      <h1>Already open elsewhere</h1>
+      <p>{{ auth.sessionConflictReason() }}</p>
+      @if (auth.sessionConflictActiveGame() === true) {
+        <p>
+          That tab has a game in progress. Continuing here will disconnect it and drop you right
+          back into that game.
+        </p>
+      } @else if (auth.sessionConflictActiveGame() === false) {
+        <p>Continuing here will disconnect that tab - it has no game in progress to lose.</p>
+      } @else {
+        <p>Continuing here will disconnect that tab from any game it has open.</p>
+      }
+    </div>
+    <button type="button" class="btn btn-primary wide" (click)="store.confirmSessionTakeover()">
+      Continue here
+    </button>
+    <button type="button" class="btn btn-quiet" (click)="store.declineSessionTakeover()">
+      Cancel
+    </button>
+  } @else if (auth.sessionConflictStep() === 'declined') {
+    <div class="say">
+      <h1>Staying out</h1>
+      <p>This tab did not take over the session, so it has no lobby to show.</p>
+    </div>
+    <button type="button" class="btn btn-primary wide" (click)="store.retrySessionTakeover()">
+      Try again
+    </button>
+  } @else {
+    <div class="say">
+      <h1>Welcome back</h1>
+      <p>Sign in to continue.</p>
+    </div>
+
+    @if (auth.googleClientId()) {
+      <div #googleButton class="gis"></div>
+    } @else if (auth.authMode() === 'required') {
+      <p class="problem">
+        This bridge asks for a sign-in but is missing its Google configuration, so there is nothing
+        to sign in with. Set <code>BRIDGE_GOOGLE_CLIENT_ID</code> on the <code>game</code> service.
+      </p>
+    }
+
+    @if (loadError(); as problem) {
+      <p class="problem">
+        Google's sign-in script did not load ({{ problem }}). Reloading the page is the retry.
+      </p>
+    }
+    @if (auth.signInError(); as problem) {
+      <p class="problem">{{ problem }}</p>
+    }
+
+    @if (auth.authMode() === 'off') {
+      <button type="button" class="btn btn-outline wide" (click)="auth.continueAsGuest()">
+        Continue as guest
+      </button>
+    }
+
+    <p class="fine">By continuing you agree to the <a routerLink="/privacy">Privacy Policy</a>.</p>
+  }
+</app-void-scene>

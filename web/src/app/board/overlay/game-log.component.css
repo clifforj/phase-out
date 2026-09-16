@@ -1,0 +1,44 @@
+ol {
+  flex: 1;
+  min-height: 6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-y: auto;
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+li {
+  padding: 0.05rem 0;
+  overflow-wrap: anywhere;
+}
+
+li.status {
+  color: var(--accent);
+}
+
+li.empty {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.turn {
+  margin-right: 0.3rem;
+  color: var(--muted);
+}
+
+.repeats {
+  margin-left: 0.25rem;
+  padding: 0 0.2rem;
+  border-radius: var(--radius-chip);
+  background: var(--line);
+  color: var(--fg);
+  font-size: 0.66rem;
+}
+
+.hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.66rem;
+}

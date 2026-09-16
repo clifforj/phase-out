@@ -1,0 +1,25 @@
+<div
+  class="scrim"
+  (pointerdown)="armed = true"
+  (click)="onScrimClick()"
+  (contextmenu)="onScrimContext($event)"
+></div>
+
+<menu
+  class="sheet"
+  [style.--menu-x.px]="x()"
+  [style.--menu-y.px]="y()"
+  [attr.aria-label]="'Actions for ' + title()"
+>
+  <li class="title">{{ title() }}</li>
+  @for (action of actions(); track action.id) {
+    <li>
+      <button type="button" (click)="select.emit(action.id)">
+        <span class="label">{{ action.label }}</span>
+        @if (action.hint) {
+          <span class="hint">{{ action.hint }}</span>
+        }
+      </button>
+    </li>
+  }
+</menu>

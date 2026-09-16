@@ -1,0 +1,71 @@
+.row {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 10px 16px 10px 10px;
+  border-radius: 14px;
+  cursor: pointer;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 72px;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.row:hover {
+  background: var(--glass-hover);
+}
+
+.row.chosen {
+  border-color: var(--violet-edge);
+  background: linear-gradient(180deg, oklch(0.62 0.19 291 / 10%), transparent 60%), var(--glass);
+}
+
+.thumb {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.row-id {
+  flex: 1;
+  min-width: 0;
+}
+
+.row h3 {
+  margin: 0;
+  color: var(--heading);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.row-id p {
+  margin: 2px 0 0;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.row-when {
+  flex: none;
+  width: 80px;
+  color: var(--dim);
+  font-size: 12px;
+  text-align: right;
+}
+
+.chosen-pill {
+  flex: none;
+  padding: 7px 14px;
+  font-size: 12.5px;
+}
+
+@media (max-width: 640px) {
+  .row-when {
+    display: none;
+  }
+}

@@ -1,0 +1,89 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  pointer-events: auto;
+}
+
+:host(.public) {
+  gap: 0.35rem;
+  align-items: center;
+  pointer-events: none;
+}
+
+.window {
+  padding: 0.3rem 0.4rem 0.4rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-control);
+  background: var(--board-glass);
+  backdrop-filter: var(--board-glass-filter);
+}
+
+:host(.public) .window {
+  padding: 0.4rem 0.6rem 0.5rem;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
+  pointer-events: auto;
+}
+
+h3 {
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+  margin: 0 0 0.3rem;
+  font-size: 0.62rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+:host(.public) h3 {
+  justify-content: center;
+}
+
+.tag {
+  padding: 0 0.25rem;
+  border: 1px dashed color-mix(in srgb, var(--fg) 20%, transparent);
+  border-radius: 0.7rem;
+  font-size: 0.9em;
+}
+
+:host(.public) .tag {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  color: color-mix(in srgb, var(--accent) 70%, var(--fg));
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:host(.public) .cards {
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.card {
+  display: block;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius-chip);
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: default;
+}
+
+.card.selectable {
+  border-color: var(--actionable);
+  cursor: pointer;
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}

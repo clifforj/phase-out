@@ -1,0 +1,71 @@
+:host {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: auto;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+}
+
+.sheet {
+  position: absolute;
+  left: min(var(--menu-x), calc(100% - 13rem));
+  top: min(var(--menu-y), calc(100% - 12rem));
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 11rem;
+  max-height: calc(100% - 1rem);
+  margin: 0;
+  padding: 0.3rem;
+  border: 1px solid var(--line-input);
+  border-radius: 14px;
+  overflow-y: auto;
+  background: var(--board-popover-glass);
+  backdrop-filter: var(--board-popover-filter);
+  list-style: none;
+  box-shadow: var(--shadow-popover);
+}
+
+.title {
+  max-width: 13rem;
+  padding: 0.1rem 0.45rem 0.25rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.64rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+button {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  width: 100%;
+  padding: 0.25rem 0.45rem;
+  border: 0;
+  border-radius: var(--radius-chip);
+  background: none;
+  color: var(--fg);
+  font: inherit;
+  font-size: 0.78rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+button:hover,
+button:focus-visible {
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  outline: none;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.62rem;
+}

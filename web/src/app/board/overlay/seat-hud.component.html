@@ -1,0 +1,95 @@
+<div
+  class="chip"
+  [class.active]="player().isActive"
+  [class.priority]="player().hasPriority"
+  [class.focused]="focused()"
+  [class.targetable]="targetable()"
+  [class.parked]="parked()"
+  [class.hidden]="hidden()"
+  [style.left]="parked() ? null : left()"
+  [style.top]="parked() ? null : top()"
+>
+  <div class="top">
+    <button
+      type="button"
+      class="seat"
+      [attr.aria-pressed]="focused()"
+      [attr.aria-haspopup]="'menu'"
+      [title]="seatTitle()"
+      (click)="onClick($event)"
+      (contextmenu)="onContextMenu($event)"
+    >
+      <span class="life" [class.low]="player().life <= 5">{{ player().life }}</span>
+      <span class="name">
+        {{ player().name }}
+        @if (player().isMe) {
+          <span class="tag">you</span>
+        }
+        @if (!player().isHuman) {
+          <span class="tag">AI</span>
+        }
+        @if (player().hasLeft) {
+          <span class="tag left">left</span>
+        }
+      </span>
+    </button>
+    <button
+      type="button"
+      class="menu-trigger"
+      [attr.aria-haspopup]="'menu'"
+      [title]="'actions for ' + player().name"
+      (click)="onMenuTrigger($event)"
+    >
+      ⋯
+    </button>
+  </div>
+  @if (lifeChange(); as change) {
+    <span class="delta" [class.gain]="change > 0" role="status"
+      >{{ change > 0 ? '+' : '−' }}{{ change > 0 ? change : -change }}</span
+    >
+  }
+  <span class="counts">
+    <span title="cards in hand"><app-icon [icon]="icons.hand" /> {{ player().handCount }}</span>
+    <span title="cards in library"
+      ><app-icon [icon]="icons.library" /> {{ player().libraryCount }}</span
+    >
+    <button
+      type="button"
+      class="zone"
+      [title]="'browse ' + player().name + '’s graveyard'"
+      (click)="openZone.emit('graveyard')"
+    >
+      <app-icon [icon]="icons.graveyard" /> {{ player().graveyard.length }}
+    </button>
+    <button
+      type="button"
+      class="zone"
+      [title]="'browse ' + player().name + '’s exile'"
+      (click)="openZone.emit('exile')"
+    >
+      <app-icon [icon]="icons.exile" /> {{ player().exile.length }}
+    </button>
+    @for (counter of player().counters; track counter.name) {
+      <span class="counter" [title]="counter.name">
+        @if (counterIconClass(counter.name); as cls) {
+          <i class="ms" [class]="cls" aria-hidden="true"></i>
+        } @else {
+          {{ counter.name }}
+        }
+        {{ counter.count }}
+      </span>
+    }
+  </span>
+  @if (mana().length || flags().length) {
+    <span class="counts">
+      @for (entry of mana(); track entry.letter) {
+        <span class="pool" [title]="entry.count + ' unspent ' + entry.symbol.label">
+          <app-mana-symbol [symbol]="entry.symbol" />{{ entry.count }}
+        </span>
+      }
+      @for (flag of flags(); track flag.text) {
+        <span class="flag" [class.crown]="flag.crown">{{ flag.text }}</span>
+      }
+    </span>
+  }
+</div>

@@ -1,0 +1,67 @@
+:host {
+  display: block;
+  margin-top: 24px;
+}
+
+.panel {
+  padding: 24px;
+}
+
+header {
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 18px;
+}
+
+.section-lead strong {
+  color: var(--fg);
+}
+
+table {
+  width: 100%;
+  margin-bottom: 8px;
+  border-collapse: collapse;
+}
+
+th {
+  padding: 0 8px 8px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+th:not(:first-child),
+td:not(:first-child) {
+  width: 6.5rem;
+}
+
+td {
+  padding: 7px 8px;
+  border-top: 1px solid rgb(255 255 255 / 7%);
+  color: var(--fg);
+  font-size: 13px;
+}
+
+input[type='checkbox'] {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--violet);
+  cursor: pointer;
+}
+
+.stops {
+  display: flex;
+  flex-direction: column;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 20px;
+}

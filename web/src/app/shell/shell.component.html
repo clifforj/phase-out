@@ -1,0 +1,50 @@
+<div class="void-page">
+  <nav class="topnav">
+    <a routerLink="/" class="brand" aria-label="Home">
+      <app-logo [size]="34" />
+    </a>
+
+    <div class="links">
+      @for (item of nav; track item.path) {
+        <a
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: item.exact }"
+        >
+          {{ item.label }}
+        </a>
+      }
+    </div>
+
+    <div class="account" [appPopover]="menuOpen()" (appPopoverDismiss)="menuOpen.set(false)">
+      <button
+        type="button"
+        class="player-card"
+        [attr.aria-expanded]="menuOpen()"
+        (click)="menuOpen.set(!menuOpen())"
+      >
+        <app-avatar [name]="name()" [hue]="prefs.avatarHue()" />
+        <span class="who">{{ name() }}</span>
+        <span class="chevron" aria-hidden="true">▾</span>
+      </button>
+
+      @if (menuOpen()) {
+        <div class="popover menu">
+          <a routerLink="/settings" (click)="menuOpen.set(false)">Settings</a>
+          <div class="sep"></div>
+          @if (auth.authMode() === 'required') {
+            <button type="button" class="danger" (click)="store.signOut()">Log out</button>
+          } @else {
+            <span class="guest">Guest session</span>
+          }
+        </div>
+      }
+    </div>
+  </nav>
+
+  <main [style.--page-width.px]="pageWidth()">
+    <router-outlet />
+  </main>
+
+  <app-site-footer [width]="pageWidth()" />
+</div>

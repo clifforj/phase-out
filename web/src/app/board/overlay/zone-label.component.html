@@ -1,0 +1,20 @@
+<button
+  type="button"
+  class="tag"
+  [class.on]="active()"
+  [class.needs-target]="needsTarget()"
+  [class.empty]="!anchor().count"
+  [class.hidden]="!anchor().visible"
+  [style.left]="left()"
+  [style.top]="top()"
+  [title]="title()"
+  (pointerenter)="hover.emit(true)"
+  (pointerleave)="hover.emit(false)"
+  (focus)="hover.emit(true)"
+  (blur)="hover.emit(false)"
+  (click)="open.emit()"
+>
+  <app-icon class="glyph" [icon]="icon()" />
+  <span class="name">{{ anchor().kind }}</span>
+  <span class="count">{{ anchor().count }}</span>
+</button>

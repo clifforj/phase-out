@@ -1,0 +1,182 @@
+<app-dialog
+  heading="Import Deck"
+  [lead]="
+    step() === 'source'
+      ? 'Step 1 of 2 - bring in the list'
+      : 'Step 2 of 2 - confirm the commander(s)'
+  "
+  [width]="step() === 'source' ? 440 : 560"
+  (dismiss)="close.emit()"
+>
+  <div class="steps" aria-hidden="true">
+    <span class="dot" [class.on]="true"></span>
+    <span class="dot" [class.on]="step() === 'commanders'"></span>
+  </div>
+
+  @if (step() === 'source') {
+    <div>
+      <span class="field-label">Source</span>
+      <div class="chips" role="tablist">
+        <button
+          type="button"
+          role="tab"
+          class="chip"
+          [class.on]="source() === 'paste'"
+          [attr.aria-selected]="source() === 'paste'"
+          (click)="source.set('paste')"
+        >
+          Paste text
+        </button>
+        <button
+          type="button"
+          role="tab"
+          class="chip"
+          [class.on]="source() === 'upload'"
+          [attr.aria-selected]="source() === 'upload'"
+          (click)="source.set('upload')"
+        >
+          Upload file
+        </button>
+      </div>
+    </div>
+
+    @if (source() === 'paste') {
+      <div>
+        <span class="field-label">Decklist</span>
+        <textarea
+          class="field list"
+          rows="8"
+          spellcheck="false"
+          aria-label="decklist"
+          placeholder="Paste a decklist - Moxfield, Archidekt, TappedOut, Deckstats, Arena, MTGO or a .dck file.&#10;&#10;Commander&#10;1 Tidus, Yuna's Guardian&#10;&#10;Deck&#10;1 Sol Ring&#10;1 Arcane Signet (FIC) 333&#10;…"
+          [value]="text()"
+          (input)="text.set($any($event.target).value)"
+        ></textarea>
+      </div>
+    } @else {
+      <div>
+        <span class="field-label">File</span>
+        <label
+          class="drop"
+          [class.over]="dragging()"
+          (dragover)="onDragOver($event)"
+          (dragleave)="dragging.set(false)"
+          (drop)="onDrop($event)"
+        >
+          <input type="file" accept=".txt,.dck,.dec,text/plain" (change)="onPick($event)" />
+          @if (fileName(); as name) {
+            <strong>{{ name }}</strong>
+            <span>{{ lineCount() }} lines read - press Continue to send it.</span>
+          } @else {
+            <span>Drop a .txt or .dck file here, or click to browse</span>
+          }
+        </label>
+      </div>
+    }
+
+    <div>
+      <span class="field-label">Name</span>
+      <input
+        type="text"
+        class="field"
+        aria-label="deck name"
+        placeholder="taken from the list, if it says"
+        [value]="name()"
+        (input)="name.set($any($event.target).value)"
+      />
+    </div>
+
+    <p class="note">
+      Card names are resolved against the server's own card database, so every card in a deck that
+      imports is one the server can actually deal.
+    </p>
+
+    @if (decks.lastImport(); as result) {
+      @if (!result.ok) {
+        <div class="result bad">
+          <strong>{{ result.name }}</strong> could not be read.
+          @if (result.notes?.length) {
+            <ul>
+              @for (note of result.notes; track $index) {
+                <li [class.bad]="note.level === 'ERROR'">
+                  @if (note.lineNumber) {
+                    <span class="line">line {{ note.lineNumber }}</span>
+                  }
+                  {{ note.message }}
+                  @if (note.text) {
+                    <code>{{ note.text }}</code>
+                  }
+                </li>
+              }
+            </ul>
+          }
+        </div>
+      }
+    }
+
+    <div class="actions">
+      <button type="button" class="btn btn-outline" (click)="close.emit()">Cancel</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="!text().trim() || decks.importPending()"
+        (click)="submitSource()"
+      >
+        {{ decks.importPending() ? 'Reading…' : 'Continue' }}
+      </button>
+    </div>
+  }
+
+  @if (step() === 'commanders') {
+    <p class="note">
+      Check the card(s) that should be the commander. Partner, Partner-with, Friends forever and
+      Choose-a-Background pairings are flagged where the server can tell - this is a hint, not a
+      legality check, so a pairing that turns out to be illegal will still be refused at the table.
+    </p>
+
+    <div class="rows commander-rows">
+      @for (card of entries(); track card.setCode + card.cardNumber + card.name) {
+        <label class="row pick-row">
+          <input
+            type="checkbox"
+            [checked]="chosen().has(card.name)"
+            (change)="toggleCommander(card.name)"
+          />
+          <span class="row-text">
+            <span class="row-name">{{ card.name }}</span>
+            @if (card.partnerTag) {
+              <span class="chip-tag">{{ card.partnerTag }}</span>
+            }
+          </span>
+          @if (card.amount > 1) {
+            <span class="row-amount">×{{ card.amount }}</span>
+          }
+        </label>
+      }
+    </div>
+
+    @if (decks.lastImport(); as result) {
+      @if (result.ok && result.notes?.length) {
+        <div class="result">
+          <ul>
+            @for (note of result.notes; track $index) {
+              <li [class.bad]="note.level === 'ERROR'">{{ note.message }}</li>
+            }
+          </ul>
+        </div>
+      }
+    }
+
+    <div class="actions">
+      <button type="button" class="btn btn-outline" (click)="backToSource()">Back</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="chosenCount() === 0 || decks.importPending()"
+        (click)="save()"
+      >
+        {{ decks.importPending() ? 'Saving…' : 'Save deck' }}
+      </button>
+    </div>
+  }
+</app-dialog>

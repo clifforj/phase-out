@@ -1,0 +1,64 @@
+<section class="panel">
+  <header>
+    <h2 class="section-title">Priority</h2>
+    <p class="section-lead">Which priority windows to auto-pass. Applies to new tables only.</p>
+  </header>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Skip on…</th>
+        <th>Your turn</th>
+        <th>Opponents' turns</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (step of steps; track step.key) {
+        <tr>
+          <td>{{ step.label }}</td>
+          <td>
+            <input
+              type="checkbox"
+              [attr.aria-label]="step.label + ', your turn'"
+              [checked]="draft().yourTurn[step.key]"
+              (change)="setStep('yourTurn', step.key, $event)"
+            />
+          </td>
+          <td>
+            <input
+              type="checkbox"
+              [attr.aria-label]="step.label + ', opponent turns'"
+              [checked]="draft().opponentTurn[step.key]"
+              (change)="setStep('opponentTurn', step.key, $event)"
+            />
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <div class="stops">
+    @for (flag of flags; track flag.key) {
+      <div class="setting">
+        <div>
+          <div class="row-label">{{ flag.label }}</div>
+          <p class="row-note">{{ flag.desc }}</p>
+        </div>
+        <button
+          type="button"
+          class="switch"
+          role="switch"
+          [class.on]="draft()[flag.key]"
+          [attr.aria-checked]="draft()[flag.key]"
+          [attr.aria-label]="flag.label"
+          (click)="toggle(flag.key)"
+        ></button>
+      </div>
+    }
+  </div>
+
+  <div class="actions">
+    <button type="button" class="btn btn-primary btn-small" (click)="apply()">Apply</button>
+    <button type="button" class="btn btn-quiet" (click)="reset()">Reset to defaults</button>
+  </div>
+</section>

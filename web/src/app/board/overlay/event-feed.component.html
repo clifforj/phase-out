@@ -1,0 +1,24 @@
+@for (event of shown(); track event.id) {
+  <button
+    type="button"
+    class="event"
+    [attr.data-kind]="event.kind"
+    [title]="
+      event.text +
+      (event.objectIds.length ? ' - click to show the card' : ' - click to open the log')
+    "
+    (click)="pick.emit(event)"
+  >
+    @if (glyph(event.kind); as icon) {
+      <app-icon class="glyph" [icon]="icon" />
+    } @else {
+      <span class="glyph" aria-hidden="true">·</span>
+    }
+    <span class="text"><app-mana-text [text]="event.text" /></span>
+    @if (event.repeats > 1) {
+      <span class="repeats" title="the engine logged this {{ event.repeats }} times in a row"
+        >×{{ event.repeats }}</span
+      >
+    }
+  </button>
+}

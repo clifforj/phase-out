@@ -1,0 +1,7 @@
+services:
+  game:
+    build: !reset null
+    image: ghcr.io/${IMAGE_REPOSITORY:?set IMAGE_REPOSITORY in .env}/game:${IMAGE_TAG:-latest}
+  web:
+    build: !reset null
+    image: ghcr.io/${IMAGE_REPOSITORY:?set IMAGE_REPOSITORY in .env}/web:${IMAGE_TAG:-latest}

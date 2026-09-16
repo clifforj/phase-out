@@ -1,0 +1,43 @@
+name: phase-out
+
+services:
+  game:
+    build:
+      context: .
+      dockerfile: docker/game/Dockerfile
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - xmage-db:/opt/xmage/db
+      - xmage-saved:/opt/xmage/saved
+      - bridge-decks:/opt/bridge/decks-imported
+      - bridge-playmat-images:/opt/bridge/playmat-images
+      - bridge-accounts:/opt/bridge/accounts
+    environment:
+      XMAGE_JAVA_OPTS: -Xmx1536m
+      BRIDGE_GAME_TYPE: Commander Two Player Duel
+      BRIDGE_MULTIPLAYER_GAME_TYPE: Commander Free For All
+      BRIDGE_DECK_TYPE: Variant Magic - Commander
+      BRIDGE_AUTH_MODE: ${BRIDGE_AUTH_MODE:-off}
+      BRIDGE_GOOGLE_CLIENT_ID: ${BRIDGE_GOOGLE_CLIENT_ID:-}
+      BRIDGE_AUTH_SECRET: ${BRIDGE_AUTH_SECRET:-}
+      BRIDGE_ALLOWED_EMAILS: ${BRIDGE_ALLOWED_EMAILS:-}
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./web
+      args:
+        CONTACT_EMAIL: ${PRIVACY_CONTACT_EMAIL:-}
+    ports:
+      - "127.0.0.1:8081:80"
+    depends_on:
+      - game
+    restart: unless-stopped
+
+volumes:
+  xmage-db:
+  xmage-saved:
+  bridge-decks:
+  bridge-playmat-images:
+  bridge-accounts:

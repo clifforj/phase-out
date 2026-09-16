@@ -1,0 +1,129 @@
+.deck {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 340px;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.deck:hover {
+  border-color: var(--violet-edge);
+  box-shadow: 0 12px 28px rgb(0 0 0 / 35%);
+  transform: translateY(-4px);
+}
+
+.deck:hover .banner img {
+  transform: scale(1.05);
+}
+
+.deck.chosen {
+  border-color: var(--violet-edge);
+  background: linear-gradient(180deg, oklch(0.62 0.19 291 / 10%), transparent 60%), var(--glass);
+}
+
+.banner {
+  position: relative;
+  flex: none;
+  overflow: hidden;
+  aspect-ratio: 626 / 457;
+}
+
+.banner img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.scrim {
+  position: absolute;
+  pointer-events: none;
+}
+
+.scrim-bottom {
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 62%;
+  background: linear-gradient(to top, rgb(4 4 6) 0%, rgb(4 4 6) 4%, transparent 100%);
+}
+
+.pips-chip {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  padding: 5px 6px;
+  border: 1px solid rgb(255 255 255 / 14%);
+  border-radius: 999px;
+  background: rgb(6 6 8 / 55%);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
+}
+
+.credit {
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  left: 12px;
+  display: flex;
+  justify-content: flex-end;
+  overflow: hidden;
+  color: rgb(255 255 255 / 88%);
+  font-size: 11px;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 80%);
+  pointer-events: none;
+}
+
+.body {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 20px 20px;
+  background: rgb(4 4 6);
+}
+
+.body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 4px;
+  background: rgb(4 4 6);
+  pointer-events: none;
+}
+
+.deck h3 {
+  margin: 0;
+  color: var(--heading);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.meta {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: auto;
+}
+
+.card-action {
+  flex: 1;
+  padding: 9px;
+}

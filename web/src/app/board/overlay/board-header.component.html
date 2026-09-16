@@ -1,0 +1,74 @@
+<header class="top">
+  <div class="top-left">
+    <button type="button" class="link" (click)="leave.emit()">
+      <app-icon [icon]="leaveIcon" /> tables
+    </button>
+
+    <div class="board-chip views-section" aria-label="camera presets">
+      <app-icon class="views-icon" [icon]="camerasIcon" />
+      <span class="views-label">view</span>
+      <div class="views">
+        @for (preset of views(); track preset) {
+          <button type="button" (click)="view.emit(preset)">{{ preset }}</button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="top-right">
+    @if (turn(); as turn) {
+      @if (turn.phase || turn.step) {
+        <button
+          type="button"
+          class="board-chip phase-trigger"
+          [class.mine]="turn.activeIsMe"
+          [attr.aria-expanded]="popoverOpen()"
+          [title]="popoverOpen() ? 'hide the turn timeline' : 'show the turn timeline'"
+          (click)="popoverOpen.set(!popoverOpen())"
+        >
+          <span class="phase-label">{{ turn.chipLabel }}</span>
+          <span
+            class="turn-caption"
+            [title]="turn.activeIsMe ? 'it is your turn' : 'whose turn it is'"
+          >
+            <span class="cap">round</span>&ngsp;<strong>{{ turn.round }}</strong
+            >&ngsp;·&ngsp;<span class="cap">turn</span>&ngsp;<strong>{{ turn.turn }}</strong
+            >&ngsp;·&ngsp;{{ turn.activeIsMe ? 'your turn' : (turn.activeName ?? '-') }}
+          </span>
+          <app-icon
+            class="chip-tag muted disclosure"
+            [icon]="popoverOpen() ? chevronUp : chevronDown"
+          />
+        </button>
+      }
+    }
+
+    <button
+      type="button"
+      class="board-chip log-tab"
+      [attr.aria-expanded]="logOpen()"
+      [title]="logOpen() ? 'close the game log (l)' : 'read the game log (l)'"
+      (click)="logOpen.set(!logOpen())"
+    >
+      <span aria-hidden="true">❧</span>
+      <span>log</span>
+      <strong>{{ logCount() }}</strong>
+      <span class="chip-tag muted">l</span>
+    </button>
+  </div>
+</header>
+
+@if (popoverOpen()) {
+  @if (turn(); as turn) {
+    <div class="popover-scrim" (click)="popoverOpen.set(false)"></div>
+    <div class="popover">
+      <app-turn-timeline
+        [turn]="turn.turn"
+        [round]="turn.round"
+        [phase]="turn.phase"
+        [step]="turn.step"
+        [activeIsMe]="turn.activeIsMe"
+      />
+    </div>
+  }
+}

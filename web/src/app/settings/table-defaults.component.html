@@ -1,0 +1,47 @@
+<section class="panel rows">
+  <div class="setting">
+    <div>
+      <div class="row-label">Default table size</div>
+      <p class="row-note">{{ gameType(prefs.seats()) }}. Sets Home's default seat count.</p>
+    </div>
+    <select
+      class="field pick"
+      aria-label="default table size"
+      [value]="prefs.seats()"
+      (change)="prefs.seats.set(+$any($event.target).value)"
+    >
+      @for (n of seatChoices; track n) {
+        <option [value]="n">{{ n }} players</option>
+      }
+    </select>
+  </div>
+
+  <div class="setting last">
+    <div>
+      <div class="row-label">Default deck</div>
+      <p class="row-note">Read when a seat is taken, not now.</p>
+    </div>
+    <select
+      class="field pick"
+      aria-label="default deck"
+      [value]="decks.selectedDeckId() ?? ''"
+      (change)="pickDeck($any($event.target).value)"
+    >
+      <option value="">Deal me one</option>
+      @if (decks.decks().length) {
+        <optgroup label="Yours">
+          @for (deck of decks.decks(); track deck.deckId) {
+            <option [value]="deck.deckId">{{ deck.name }}</option>
+          }
+        </optgroup>
+      }
+      @if (decks.builtInDecks().length) {
+        <optgroup label="Ready to play">
+          @for (deck of decks.builtInDecks(); track deck.deckId) {
+            <option [value]="deck.deckId">{{ deck.name }}</option>
+          }
+        </optgroup>
+      }
+    </select>
+  </div>
+</section>

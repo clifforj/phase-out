@@ -1,0 +1,29 @@
+<div class="layout">
+  <nav class="sidebar">
+    <h1 class="page-title">Settings</h1>
+    <button type="button" class="cat" [class.on]="tab() === 'account'" (click)="tab.set('account')">
+      Account &amp; Profile
+    </button>
+    <button
+      type="button"
+      class="cat"
+      [class.on]="tab() === 'gameplay'"
+      (click)="tab.set('gameplay')"
+    >
+      Gameplay
+    </button>
+  </nav>
+
+  <div class="content">
+    @switch (tab()) {
+      @case ('account') {
+        <app-profile-settings />
+      }
+
+      @case ('gameplay') {
+        <app-table-defaults />
+        <app-skip-priority-settings />
+      }
+    }
+  </div>
+</div>

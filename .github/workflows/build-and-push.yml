@@ -1,0 +1,93 @@
+name: Build and push images
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: Deploy after publishing
+        type: boolean
+        default: false
+      environment:
+        description: Deployment environment (only used when deploying)
+        type: environment
+        default: production
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-images
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Prepare source and card data
+        run: |
+          node tools/cards/build.mjs --check
+          node tools/card-art/build-index.mjs
+      - name: Test web client
+        working-directory: web
+        run: |
+          npm ci
+          npm test -- --watch=false
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Image repository
+        id: image
+        shell: bash
+        run: echo "repository=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+      - name: Build, test and push game
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/game/Dockerfile
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ steps.image.outputs.repository }}/game:latest
+            ${{ steps.image.outputs.repository }}/game:${{ github.sha }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+          cache-from: type=gha,scope=game
+          cache-to: type=gha,mode=max,scope=game
+      - name: Build and push web
+        uses: docker/build-push-action@v6
+        with:
+          context: ./web
+          push: true
+          platforms: linux/amd64,linux/arm64
+          build-args: CONTACT_EMAIL=${{ vars.PRIVACY_CONTACT_EMAIL }}
+          tags: |
+            ${{ steps.image.outputs.repository }}/web:latest
+            ${{ steps.image.outputs.repository }}/web:${{ github.sha }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,mode=max,scope=web
+  deploy:
+    if: ${{ inputs.deploy }}
+    needs: build
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: ${{ inputs.environment }}
+    secrets: inherit

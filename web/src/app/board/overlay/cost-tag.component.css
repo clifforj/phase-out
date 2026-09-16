@@ -1,0 +1,104 @@
+:host {
+  position: absolute;
+  transform: translate(-50%, 0.6rem);
+  pointer-events: none;
+  z-index: 1;
+}
+
+@property --void-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.tag {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  align-items: center;
+  width: max-content;
+  max-width: 18rem;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid var(--line-panel);
+  border-radius: var(--radius-small);
+  background: var(--board-glass);
+  backdrop-filter: var(--board-glass-filter);
+  text-align: center;
+  box-shadow: 0 0.3rem 0.9rem rgb(0 0 0 / 55%);
+  pointer-events: auto;
+}
+
+.tag::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--void-angle),
+    oklch(0.62 0.19 291 / 90%),
+    oklch(0.7 0.14 55 / 80%) 33%,
+    oklch(0.65 0.15 240 / 85%) 66%,
+    oklch(0.62 0.19 291 / 90%)
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: void-angle-spin 5s linear infinite;
+  pointer-events: none;
+}
+
+.tag > * {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes void-angle-spin {
+  to {
+    --void-angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tag::before {
+    animation: none;
+  }
+}
+
+.what {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+  margin: 0;
+}
+
+.cap {
+  color: var(--muted);
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.cost {
+  font-size: 1.05rem;
+}
+
+.name {
+  max-width: 100%;
+  margin: 0;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.66rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+app-mana-prompt {
+  margin-top: 0.1rem;
+  width: 100%;
+  text-align: left;
+}

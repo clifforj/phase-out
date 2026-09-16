@@ -1,0 +1,24 @@
+@if (store.protocolMismatch(); as reason) {
+  <div class="halt">
+    <h1>Stopped</h1>
+    <p>{{ reason }}</p>
+    <p class="muted">
+      The app and server versions do not match. Refresh the page to load the latest app.
+    </p>
+  </div>
+} @else if (isPublicRoute()) {
+  <router-outlet />
+} @else if (auth.needsSignIn() || auth.needsSessionDecision()) {
+  <app-sign-in />
+} @else if (!auth.ready()) {
+  <app-void-scene>
+    <app-logo [size]="60" />
+    <p class="connecting" aria-live="polite">Connecting…</p>
+  </app-void-scene>
+} @else {
+  <div class="view">
+    <router-outlet />
+  </div>
+}
+
+<app-toast-list [toasts]="store.toasts()" (dismiss)="store.dismissToast($event)" />

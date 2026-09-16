@@ -1,0 +1,8 @@
+<div class="tag">
+  <p class="what">
+    <span class="cap">still to pay</span>
+    <app-mana-cost class="cost" [cost]="store.unpaidManaCost()" />
+  </p>
+  <p class="name">{{ spellName() }}</p>
+  <app-mana-prompt />
+</div>

@@ -1,0 +1,14 @@
+@if (shown(); as announcement) {
+  <div
+    class="announce"
+    [class.mine]="announcement.mine"
+    [class.phase]="announcement.kind === 'phase'"
+    role="status"
+    aria-live="polite"
+  >
+    <p class="line">{{ announcement.text }}</p>
+    @if (announcement.detail) {
+      <p class="detail">{{ announcement.detail }}</p>
+    }
+  </div>
+}

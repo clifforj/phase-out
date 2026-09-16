@@ -1,0 +1,98 @@
+<div class="playmat-field">
+  <div>
+    <span class="field-label">Playmat</span>
+    <p class="hint">
+      Background image shown under your cards at the table.
+      @if (playmatUploadError(); as message) {
+        <span class="upload-error">{{ message }}</span>
+      }
+    </p>
+  </div>
+
+  <div class="playmat-picker" role="radiogroup" aria-label="playmat">
+    <div class="playmat-upload-col">
+      @if (uploadedPlaymatUrl(); as url) {
+        <button
+          type="button"
+          role="radio"
+          class="playmat-upload"
+          [class.on]="customPlaymatSelected()"
+          [attr.aria-checked]="customPlaymatSelected()"
+          [attr.aria-label]="
+            customPlaymatSelected()
+              ? 'your uploaded playmat - click to replace it'
+              : 'your uploaded playmat - click to use it'
+          "
+          [title]="
+            customPlaymatSelected() ? 'Your upload - click to replace' : 'Click to use your upload'
+          "
+          [disabled]="playmatUploading()"
+          [style.background-image]="'url(' + url + ')'"
+          (click)="customPlaymatSelected() ? playmatFile.click() : selectUploadedPlaymat()"
+        >
+          <span class="playmat-upload-tag">{{
+            playmatUploading()
+              ? 'Uploading…'
+              : customPlaymatSelected()
+                ? 'Your upload · click to replace'
+                : 'Your upload · click to use it'
+          }}</span>
+        </button>
+      } @else {
+        <button
+          type="button"
+          class="playmat-upload empty"
+          [disabled]="playmatUploading()"
+          aria-label="upload a playmat image"
+          (click)="playmatFile.click()"
+        >
+          <span class="playmat-upload-icon">{{ playmatUploading() ? '…' : '+' }}</span>
+          <span class="playmat-upload-title">Upload your own</span>
+          <span class="playmat-upload-sub">PNG, JPEG or WEBP · up to 6&nbsp;MB</span>
+        </button>
+      }
+      <input
+        #playmatFile
+        type="file"
+        accept="image/png,image/jpeg,image/webp"
+        hidden
+        (change)="onPlaymatFileChosen(playmatFile)"
+      />
+    </div>
+
+    <div class="playmat-basics-col">
+      <button
+        type="button"
+        role="radio"
+        class="playmat-none"
+        [class.on]="prefs.playmatId() === null"
+        [attr.aria-checked]="prefs.playmatId() === null"
+        (click)="prefs.playmatId.set(null)"
+      >
+        <span class="playmat-none-swatch" aria-hidden="true"></span>
+        <span class="playmat-none-copy">
+          <span class="playmat-none-title">No playmat</span>
+          <span class="playmat-none-sub">Just the table felt</span>
+        </span>
+      </button>
+
+      <span class="playmat-basics-label">Basic playmats</span>
+      <div class="mat-swatches">
+        @for (mat of playerMats; track mat.id) {
+          <button
+            type="button"
+            role="radio"
+            class="mat-swatch"
+            [class.on]="prefs.playmatId() === mat.id"
+            [attr.aria-checked]="prefs.playmatId() === mat.id"
+            [attr.aria-label]="mat.label + ' playmat'"
+            [title]="mat.label"
+            [style.background]="'#' + mat.fill.toString(16).padStart(6, '0')"
+            [style.border-color]="'#' + mat.edge.toString(16).padStart(6, '0')"
+            (click)="prefs.playmatId.set(mat.id)"
+          ></button>
+        }
+      </div>
+    </div>
+  </div>
+</div>

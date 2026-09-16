@@ -1,0 +1,47 @@
+<article class="panel panel-flat deck" [class.chosen]="chosen()" (click)="play.emit()">
+  <div class="banner" [style.background]="wash()">
+    @if (art(); as url) {
+      <img [src]="url" [alt]="commanders() || deck().name" />
+    }
+    <span class="scrim scrim-bottom"></span>
+    <span class="pips-chip">
+      <app-mana-pips [deck]="deck()" [size]="12" />
+    </span>
+    @if (artist(); as name) {
+      <span class="credit">
+        <app-artist-credit [name]="name" [size]="11" />
+      </span>
+    }
+  </div>
+
+  <div class="body">
+    <h3>{{ deck().name }}</h3>
+    <p class="meta">
+      {{ commanders() || 'No general listed' }}
+      @if (tab() === 'mine') {
+        @if (deck().savedAt; as savedAt) {
+          · Updated {{ ago(savedAt) }}
+        }
+      } @else {
+        · Precon
+      }
+    </p>
+
+    <div class="card-actions">
+      @if (chosen()) {
+        <span class="chosen-pill">Playing this</span>
+      } @else {
+        <button type="button" class="btn btn-ghost card-action" (click)="play.emit()">
+          Play this
+        </button>
+      }
+      <a
+        class="btn btn-quiet"
+        [routerLink]="['/decks', deck().deckId]"
+        (click)="$event.stopPropagation()"
+      >
+        View
+      </a>
+    </div>
+  </div>
+</article>

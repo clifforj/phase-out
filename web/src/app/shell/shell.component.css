@@ -1,0 +1,154 @@
+:host {
+  display: block;
+  height: 100%;
+  overflow-y: auto;
+
+  --nav-height: 69px;
+}
+
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 32px;
+  border-bottom: 1px solid var(--line);
+  background: var(--nav-glass);
+  backdrop-filter: var(--blur-nav);
+}
+
+.brand {
+  display: flex;
+}
+
+.links {
+  position: absolute;
+  left: 50%;
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  transform: translateX(-50%);
+}
+
+.links a {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.links a:hover {
+  color: oklch(0.9 0.01 264);
+}
+
+.links a.active {
+  color: var(--heading);
+  font-weight: 600;
+}
+
+.account {
+  position: relative;
+  margin-left: auto;
+}
+
+.player-card {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  max-width: 15rem;
+  padding: 5px 14px 5px 5px;
+  border: 1px solid var(--line-input);
+  border-radius: var(--radius-pill);
+  background: var(--glass-control);
+  color: inherit;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.player-card:hover {
+  background: var(--glass-hover);
+}
+
+.who {
+  overflow: hidden;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevron {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 180px;
+}
+
+.menu a,
+.menu button,
+.menu .guest {
+  display: block;
+  width: 100%;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: var(--radius-small);
+  background: none;
+  color: oklch(0.9 0.01 264);
+  font-family: inherit;
+  font-size: 13.5px;
+  text-align: left;
+}
+
+.menu a:hover,
+.menu button:hover {
+  background: rgb(255 255 255 / 6%);
+}
+
+.menu button {
+  cursor: pointer;
+}
+
+.menu .danger {
+  color: var(--danger);
+}
+
+.menu .guest {
+  color: var(--faint);
+}
+
+.sep {
+  height: 1px;
+  margin: 4px 6px;
+  background: var(--line);
+}
+
+main {
+  display: block;
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+@media (max-width: 640px) {
+  .topnav {
+    padding: 12px 18px;
+  }
+
+  .links {
+    gap: 24px;
+  }
+
+  main {
+    padding: 0 18px;
+  }
+}

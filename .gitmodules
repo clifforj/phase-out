@@ -1,0 +1,3 @@
+[submodule "vendor/xmage"]
+	path = vendor/xmage
+	url = https://github.com/magefree/mage.git

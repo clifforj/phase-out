@@ -1,0 +1,165 @@
+:host {
+  display: block;
+}
+
+.tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  width: var(--tile-w, 8.5rem);
+
+  min-height: calc(var(--tile-w, 8.5rem) * 88 / 63);
+  padding: 0.3rem 0.35rem;
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  background: var(--panel);
+  font-size: 0.7rem;
+  line-height: 1.25;
+  overflow: hidden;
+  transition: transform 120ms ease;
+}
+
+.tile.compact {
+  min-height: 0;
+  width: var(--tile-w, 7.5rem);
+}
+
+.tile.tapped {
+  transform: rotate(90deg) scale(0.92);
+}
+
+.tile.face-down {
+  filter: saturate(0.2) brightness(0.8);
+  border-style: dashed;
+}
+
+.tile.token {
+  border-style: dotted;
+}
+
+.tile.playable {
+  outline: 1px solid var(--playable);
+  outline-offset: 1px;
+  box-shadow: 0 0 0.5rem color-mix(in srgb, var(--playable) 45%, transparent);
+}
+
+.art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.tile > *:not(.art) {
+  position: relative;
+  z-index: 1;
+  text-shadow:
+    0 1px 3px rgb(0 0 0 / 75%),
+    0 0 6px rgb(0 0 0 / 55%);
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.25rem;
+  align-items: flex-start;
+}
+
+.name {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.cost {
+  font-size: 0.85rem;
+
+  text-shadow: none;
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 65%));
+}
+
+.icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0 0.2rem;
+  border-radius: 0.2rem;
+  background: rgb(0 0 0 / 35%);
+  font-size: 0.62rem;
+}
+
+.icon-COMMANDER {
+  background: var(--commander);
+  color: #1b1508;
+  font-weight: 700;
+}
+
+.type {
+  color: var(--muted);
+  font-size: 0.63rem;
+  overflow-wrap: anywhere;
+}
+
+.rules {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.62rem;
+  cursor: zoom-in;
+}
+
+.rules.expanded {
+  display: block;
+  cursor: zoom-out;
+}
+
+.rules p {
+  margin: 0 0 0.15rem;
+}
+
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  align-items: baseline;
+  margin-top: auto;
+}
+
+.stats {
+  font-weight: 700;
+}
+
+.damage {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.counter,
+.badge,
+.attached {
+  padding: 0 0.2rem;
+  border: 1px solid var(--line);
+  border-radius: 0.2rem;
+  font-size: 0.6rem;
+  color: var(--muted);
+}
+
+.counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.counter .ms {
+  font-size: 1.5em;
+}

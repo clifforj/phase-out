@@ -1,0 +1,126 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  align-items: stretch;
+  width: 100%;
+  pointer-events: none;
+}
+
+@keyframes event-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.35rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes event-out {
+  to {
+    opacity: 0;
+  }
+}
+
+.event {
+  display: flex;
+  gap: 0.4rem;
+  align-items: baseline;
+  width: 100%;
+  padding: 0.22rem 0.5rem;
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--muted);
+  border-radius: var(--radius-chip);
+  background: var(--board-glass);
+  backdrop-filter: var(--board-glass-filter);
+  color: var(--fg);
+  font: inherit;
+  font-size: 0.72rem;
+  text-align: left;
+  cursor: pointer;
+  pointer-events: auto;
+  animation:
+    event-in 180ms ease-out,
+    event-out 500ms ease-in 9000ms forwards;
+}
+
+:host(.held) .event {
+  animation-play-state: paused;
+  border-color: var(--accent);
+}
+
+.event:hover,
+.event:focus-visible {
+  outline: none;
+  background: var(--panel);
+}
+
+.glyph {
+  flex: none;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+.text {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 1.3;
+}
+
+.repeats {
+  flex: none;
+  margin-left: auto;
+  padding: 0 0.2rem;
+  border-radius: var(--radius-chip);
+  background: var(--line);
+  font-size: 0.62rem;
+}
+
+.event[data-kind='removal'],
+.event[data-kind='damage'],
+.event[data-kind='ending'] {
+  border-left-color: var(--danger);
+}
+
+.event[data-kind='removal'] .glyph,
+.event[data-kind='damage'] .glyph,
+.event[data-kind='ending'] .glyph {
+  color: var(--danger);
+}
+
+.event[data-kind='ending'] {
+  border-color: var(--danger);
+}
+
+.event[data-kind='life'] {
+  border-left-color: var(--playable);
+}
+
+.event[data-kind='life'] .glyph {
+  color: var(--playable);
+}
+
+.event[data-kind='trigger'] {
+  border-left-color: var(--commander);
+}
+
+.event[data-kind='trigger'] .glyph {
+  color: var(--commander);
+}
+
+.event[data-kind='cast'],
+.event[data-kind='resolve'],
+.event[data-kind='combat'] {
+  border-left-color: var(--accent);
+}
+
+.event[data-kind='cast'] .glyph,
+.event[data-kind='resolve'] .glyph,
+.event[data-kind='combat'] .glyph {
+  color: var(--accent);
+}

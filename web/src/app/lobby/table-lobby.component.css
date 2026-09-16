@@ -1,0 +1,154 @@
+:host {
+  display: block;
+}
+
+.say {
+  width: 100%;
+  text-align: center;
+}
+
+.say h1 {
+  margin: 0;
+  color: var(--heading);
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.say p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 13.5px;
+}
+
+.seats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.seat {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 14px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 12px;
+}
+
+.seat.filled {
+  border-style: solid;
+  border-color: var(--line-input);
+  background: var(--glass-sunken);
+}
+
+.seat.you {
+  border-color: var(--violet-edge);
+  background: var(--violet-wash);
+}
+
+.name-badge {
+  display: flex;
+  flex: 0 0 250px;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+
+.who {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 600;
+  font-size: 13.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.who.muted {
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 400;
+}
+
+.deck-pick {
+  display: flex;
+  flex: 1 1 0;
+  gap: 6px;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+  margin-left: auto;
+  padding-left: 12px;
+  border-left: 1px solid var(--line-input);
+}
+
+.deck-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.deck-name.muted {
+  font-style: italic;
+}
+
+.share {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 4px auto 0;
+}
+
+.share .field-label {
+  text-align: center;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  width: 100%;
+}
+
+code {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  border: 1px solid var(--line-input);
+  border-radius: var(--radius-small);
+  background: var(--glass-control);
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+.hint {
+  width: 100%;
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}

@@ -1,0 +1,125 @@
+:host {
+  display: block;
+}
+
+.games {
+  padding: 80px 0;
+}
+
+.games-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.lobby-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+}
+
+.status,
+.poll {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.status.bad {
+  color: var(--danger);
+}
+
+.poll {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  cursor: pointer;
+}
+
+input[type='checkbox'] {
+  accent-color: var(--violet);
+}
+
+.rooms {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.room {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.room.live {
+  border-color: var(--violet-edge);
+}
+
+.room-head {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.room-id {
+  flex: 1;
+  min-width: 0;
+}
+
+.room-id h3 {
+  margin: 0;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.room-id p {
+  margin: 0;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.room-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.state {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.room-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.seats-count {
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.empty {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.empty strong {
+  color: var(--fg);
+}

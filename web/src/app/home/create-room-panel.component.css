@@ -1,0 +1,190 @@
+:host {
+  display: contents;
+}
+
+.connecting {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.starting-overlay {
+  position: fixed;
+  inset: 0;
+
+  z-index: 60;
+}
+
+.hero {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+  margin-top: 40px;
+}
+
+.quick {
+  position: relative;
+  z-index: 1;
+  flex: 2 1 0;
+  min-width: 0;
+}
+
+@media (max-width: 860px) {
+  .hero {
+    flex-direction: column;
+  }
+}
+
+.quick-title {
+  margin: 0 0 4px;
+  color: var(--heading);
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+}
+
+.quick-lead {
+  margin: 0 0 22px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  align-items: flex-end;
+}
+
+.row + .row {
+  margin-top: 18px;
+}
+
+.cell {
+  position: relative;
+}
+
+.cell.grow {
+  flex: 1;
+  min-width: 180px;
+}
+
+.divider {
+  flex: none;
+  width: 1px;
+  height: 40px;
+  background: var(--line);
+}
+
+@media (max-width: 900px) {
+  .divider {
+    display: none;
+  }
+
+  .row {
+    gap: 18px;
+  }
+}
+
+.modes {
+  display: flex;
+  gap: 6px;
+}
+
+.stepper {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 6px 4px;
+}
+
+.step {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: rgb(255 255 255 / 6%);
+  color: var(--fg);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.step:hover:not(:disabled) {
+  background: rgb(255 255 255 / 12%);
+}
+
+.step:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.count {
+  width: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.go {
+  padding: 14px 30px;
+  font-size: 14.5px;
+}
+
+.friend {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 200px;
+  background: var(--glass);
+  text-align: center;
+}
+
+.friend-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 14px;
+  border-radius: 50%;
+  background: var(--portal);
+  color: var(--fg);
+  font-size: 17px;
+  box-shadow: 0 8px 24px oklch(0.62 0.19 291 / 30%);
+}
+
+.friend-title {
+  margin: 0 0 6px;
+  color: var(--heading);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.friend-lead {
+  margin: 0 0 20px;
+  max-width: 22rem;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.friend .by-id {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 15rem;
+  margin: 0;
+}
+
+.friend .by-id .field {
+  text-align: center;
+}
+
+.by-id-submit {
+  width: 100%;
+}

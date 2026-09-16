@@ -1,0 +1,239 @@
+<div class="stage" [class.hand-closed]="!handOpen()">
+  @if (!sceneHost.failure()) {
+    <canvas #canvas class="board" [class.stale]="stale()"></canvas>
+
+    <div #viewport class="viewport" aria-hidden="true"></div>
+  } @else {
+    <div class="fallback">
+      <h2>This browser cannot draw the 3D board</h2>
+      <p class="muted">{{ sceneHost.failure() }}</p>
+      <p>
+        The table needs WebGL, and only the table does: the game is still being watched, and
+        everything that is text (turn and phase, life, what just happened, the contents of every
+        zone and the log) is live in the overlay around this message.
+      </p>
+    </div>
+  }
+
+  <div class="overlay">
+    @for (label of zones.labels(); track label.seat + label.kind) {
+      <app-zone-label
+        [anchor]="label"
+        [ownerName]="label.ownerName"
+        [active]="zones.isLit(label)"
+        [needsTarget]="label.needsTarget"
+        (hover)="zones.labelHover($event ? label : null)"
+        (open)="zones.openFor(label.seat, label.kind)"
+      />
+    }
+    @if (stack.arrows().length) {
+      <app-target-arrows [arrows]="stack.arrows()" />
+    }
+
+    <app-board-header
+      [turn]="turn()"
+      [logCount]="store.log().length"
+      [views]="views"
+      [(logOpen)]="logOpen"
+      [(popoverOpen)]="popoverOpen"
+      (leave)="concede.leaveTable()"
+      (view)="sceneHost.setView($event)"
+    />
+
+    <footer class="bottom">
+      <app-fan-disclaimer />
+    </footer>
+
+    @if (turn(); as turn) {
+      <app-turn-announce
+        [turn]="turn.turn"
+        [activePlayerId]="turn.activePlayerId"
+        [activeName]="turn.activeName"
+        [activeIsMe]="turn.activeIsMe"
+        [phase]="turn.phase"
+      />
+    }
+
+    @if (revealed().length) {
+      <app-card-windows class="revealed" variant="public" [windows]="revealed()" />
+    }
+
+    <div class="gutter">
+      @if (banner(); as message) {
+        <p class="banner" [class]="'banner-' + message.level">{{ message.text }}</p>
+      }
+      <app-action-bar [autoPayShownElsewhere]="!!stack.costTag()" />
+      @if (lookedAt().length) {
+        <app-card-windows
+          variant="private"
+          [windows]="lookedAt()"
+          [selectableIds]="prompts.actionable()"
+          (pick)="prompts.actOn($event)"
+        />
+      }
+    </div>
+
+    @for (hint of stack.hints(); track hint.objectId) {
+      <app-stack-label
+        [headline]="hint.headline"
+        [detail]="hint.detail"
+        [left]="hint.right + 10"
+        [top]="hint.y"
+      />
+    }
+    @if (stack.costTag(); as tag) {
+      <app-cost-tag [spellName]="tag.spellName" [left]="tag.left" [top]="tag.top" />
+    }
+    @if (stack.listButton(); as button) {
+      <button
+        type="button"
+        class="board-chip stack-list-button"
+        [style.left.px]="button.left"
+        [style.top.px]="button.top"
+        (click)="stack.listOpen.set(true)"
+      >
+        view full stack ({{ button.count }})
+      </button>
+    }
+    @if (stack.listOpen()) {
+      <app-card-list-panel
+        heading="The stack"
+        [icon]="stackIcon"
+        [cards]="stack.cards()"
+        [hints]="stack.listHints()"
+        [selectableIds]="prompts.actionable()"
+        [chosenTargetIds]="prompts.chosen()"
+        emptyMessage="Nothing on the stack."
+        [showOrdinal]="true"
+        orderHint="top of the stack resolves first"
+        (close)="stack.listOpen.set(false)"
+        (pick)="prompts.actOn($event)"
+      />
+    }
+
+    @if (!logOpen()) {
+      <div class="feed">
+        <app-event-feed [events]="store.events()" (pick)="onEventPick($event)" />
+      </div>
+    }
+
+    @for (seat of seats(); track seat.player.playerId) {
+      <app-seat-hud
+        [player]="seat.player"
+        [anchor]="anchorFor(seat.index)"
+        [focused]="seat.index === 0"
+        [parked]="seat.player.isMe"
+        [targetable]="prompts.actionable().has(seat.player.playerId)"
+        [onTheStack]="stack.chipsOnTheStack().has(seat.index)"
+        [lifeChange]="lifeFlash.changes().get(seat.player.playerId) ?? null"
+        (menu)="onSeatMenu(seat.player.playerId, $event)"
+        (openZone)="zones.openFor(seat.index, $event)"
+      />
+    }
+
+    @if (zones.openContents(); as zone) {
+      <app-zone-browser
+        [kind]="zone.kind"
+        [ownerName]="zone.ownerName"
+        [cards]="zone.cards"
+        [selectableIds]="prompts.actionable()"
+        [chosenTargetIds]="prompts.chosen()"
+        (pick)="pickFromZone($event)"
+        (close)="zones.close()"
+      />
+    }
+
+    @if (prompts.cardChoice(); as prompt) {
+      <app-card-choice
+        [prompt]="prompt"
+        [selectableIds]="prompts.actionable()"
+        [chosenTargetIds]="prompts.chosen()"
+        (pick)="prompts.actOn($event)"
+        (cancel)="store.cancel()"
+      />
+    }
+
+    @if (store.targetListOpen() && prompts.targetListCards().length) {
+      <app-card-list-panel
+        heading="Choose a target"
+        [icon]="targetIcon"
+        [cards]="prompts.targetListCards()"
+        [selectableIds]="prompts.actionable()"
+        [chosenTargetIds]="prompts.chosen()"
+        emptyMessage="Nothing left to choose."
+        [showOrdinal]="false"
+        (close)="store.targetListOpen.set(false)"
+        (pick)="prompts.actOn($event)"
+      />
+    }
+    @if (store.choiceListOpen() && prompts.choiceListChoices().length) {
+      <app-choice-list-panel
+        heading="Choose"
+        [choices]="prompts.choiceListChoices()"
+        (close)="store.choiceListOpen.set(false)"
+        (pick)="prompts.chooseFromList($event)"
+      />
+    }
+
+    @if (prompts.triggerOrder(); as prompt) {
+      <app-trigger-order
+        [prompt]="prompt"
+        (commit)="store.orderTriggers($event)"
+        (close)="store.cancel()"
+      />
+    }
+
+    @if (myHand().length) {
+      <button
+        type="button"
+        class="board-chip hand-tab"
+        [attr.aria-expanded]="handOpen()"
+        [title]="handOpen() ? 'hide your hand (h)' : 'show your hand (h)'"
+        (click)="handOpen.set(!handOpen())"
+      >
+        <span class="hand-label">hand</span>
+        <strong>{{ myHand().length }}</strong>
+        <span class="hand-label">{{ handOpen() ? '▾' : '▴' }}</span>
+        <span class="chip-tag muted">h</span>
+      </button>
+    }
+
+    @if (showResult(); as result) {
+      <app-game-result
+        [text]="result.text"
+        [matchInfo]="result.matchInfo"
+        (dismiss)="resultDismissed.set(true)"
+      />
+    }
+
+    @if (logOpen()) {
+      <app-game-log [lines]="store.log()" (close)="logOpen.set(false)" />
+    }
+
+    @if (inspection(); as view) {
+      <app-card-inspector
+        [placement]="view.placement"
+        [ownerName]="view.ownerName"
+        [attachedToName]="view.attachedToName"
+        [attachmentNames]="view.attachmentNames"
+        [stackDepth]="view.stackDepth"
+        (close)="inspectedId.set(null)"
+      />
+    }
+
+    @if (menu(); as menu) {
+      <app-context-menu
+        [title]="menu.title"
+        [actions]="menu.actions"
+        [x]="menu.target.x"
+        [y]="menu.target.y"
+        (select)="onMenuAction($event)"
+        (close)="menuTarget.set(null)"
+      />
+    }
+
+    @if (concede.confirming()) {
+      <app-concede-dialog (confirm)="concede.confirm()" (cancel)="concede.cancel()" />
+    }
+  </div>
+</div>

@@ -1,0 +1,233 @@
+:host {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.chip {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  align-items: flex-start;
+  width: max-content;
+  max-width: 17rem;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-small);
+  background: var(--board-glass);
+  backdrop-filter: var(--board-glass-filter);
+  color: var(--fg);
+  font: inherit;
+  text-align: left;
+  pointer-events: auto;
+
+  box-shadow:
+    0 0 0 1px transparent,
+    0 0.3rem 0.9rem rgb(0 0 0 / 45%);
+  transition:
+    border-color 150ms ease,
+    box-shadow 220ms ease 550ms;
+}
+
+.chip.targetable {
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.top {
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+  max-width: 100%;
+}
+
+.seat {
+  display: flex;
+  gap: 0.45rem;
+  align-items: center;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.seat:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-chip);
+}
+
+.menu-trigger {
+  flex: none;
+  margin-left: auto;
+  padding: 0.05rem 0.35rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-chip);
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.menu-trigger:hover,
+.menu-trigger:focus-visible {
+  border-color: var(--accent);
+  color: var(--fg);
+  outline: none;
+}
+
+.chip.parked {
+  left: 0.7rem;
+  bottom: 2.7rem;
+  transform: none;
+}
+
+.chip.hidden {
+  visibility: hidden;
+}
+
+.chip.active {
+  border-color: var(--accent);
+}
+
+.chip.priority {
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 0.3rem 0.9rem rgb(0 0 0 / 45%);
+}
+
+.chip.focused {
+  border-color: var(--commander);
+}
+
+.chip.targetable {
+  border-color: var(--actionable);
+  box-shadow:
+    0 0 0 1px var(--actionable),
+    0 0.3rem 0.9rem rgb(0 0 0 / 45%);
+}
+
+.life {
+  min-width: 2.3rem;
+  font-size: 1.9rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.life.low {
+  color: var(--danger);
+}
+
+@keyframes life-delta {
+  from {
+    opacity: 0;
+    transform: translateY(0.35rem);
+  }
+  15% {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-0.5rem);
+  }
+}
+
+.delta {
+  position: absolute;
+  top: -0.15rem;
+  left: calc(100% + 0.25rem);
+  font-size: 1rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--danger);
+  text-shadow: 0 0 0.4rem rgb(0 0 0 / 80%);
+  white-space: nowrap;
+  pointer-events: none;
+  animation: life-delta 3000ms ease-out forwards;
+}
+
+.delta.gain {
+  color: var(--playable);
+}
+
+.name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.zone {
+  padding: 0.05rem 0.25rem;
+  border: 1px dashed transparent;
+  border-radius: var(--radius-chip);
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.zone:hover,
+.zone:focus-visible {
+  border-color: var(--accent);
+  border-style: solid;
+  color: var(--fg);
+  outline: none;
+}
+
+.tag {
+  margin-left: 0.25rem;
+  padding: 0 0.25rem;
+  border-radius: var(--radius-chip);
+  background: var(--line);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+}
+
+.tag.left {
+  background: var(--danger);
+  color: #fff;
+}
+
+.flag {
+  padding: 0 0.25rem;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-chip);
+  color: var(--accent);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+}
+
+.flag.crown {
+  border-color: var(--commander);
+  color: var(--commander);
+}
+
+.pool {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}

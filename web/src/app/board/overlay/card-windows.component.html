@@ -1,0 +1,32 @@
+@for (window of windows(); track window.name) {
+  <section class="window">
+    <h3>
+      <app-icon class="glyph" [icon]="icon()" />
+      <span class="label">{{ window.name }}</span>
+      <span class="tag">{{ tag() }}</span>
+    </h3>
+    <ul class="cards">
+      @for (card of window.cards; track card.objectId) {
+        <li>
+          @if (clickable()) {
+            <button
+              type="button"
+              class="card"
+              [class.selectable]="selectableIds().has(card.objectId)"
+              [title]="cardTitle(card.objectId)"
+              (click)="pick.emit(card.objectId)"
+            >
+              <app-card-tile
+                [card]="card"
+                [compact]="true"
+                [playable]="selectableIds().has(card.objectId)"
+              />
+            </button>
+          } @else {
+            <app-card-tile [card]="card" [compact]="true" />
+          }
+        </li>
+      }
+    </ul>
+  </section>
+}

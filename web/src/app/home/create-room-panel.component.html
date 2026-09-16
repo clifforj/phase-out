@@ -1,0 +1,126 @@
+@if (starting()) {
+  <div class="starting-overlay">
+    <app-void-scene>
+      <app-logo [size]="60" />
+      <p class="connecting" aria-live="polite">Starting match…</p>
+    </app-void-scene>
+  </div>
+} @else {
+  <div class="hero">
+    <section class="quick panel-feature">
+      <h1 class="quick-title">Jump Into a Game</h1>
+      <p class="quick-lead">Pick a deck, set your seats, and go.</p>
+
+      <div class="row row-top">
+        <div class="cell">
+          <span class="field-label">Mode</span>
+          <div class="modes">
+            <button
+              type="button"
+              class="tab segment"
+              [class.on]="mode() === 'ai'"
+              (click)="mode.set('ai')"
+            >
+              Play vs AI
+            </button>
+            <button
+              type="button"
+              class="tab segment"
+              [class.on]="mode() === 'room'"
+              (click)="mode.set('room')"
+            >
+              Create Room
+            </button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="cell">
+          <span class="field-label">Seats</span>
+          <div class="stepper">
+            <button
+              type="button"
+              class="step"
+              aria-label="one fewer seat"
+              [disabled]="seats() <= 2"
+              (click)="bumpSeats(-1)"
+            >
+              –
+            </button>
+            <span class="count">{{ seats() }}</span>
+            <button
+              type="button"
+              class="step"
+              aria-label="one more seat"
+              [disabled]="seats() >= maxSeats"
+              (click)="bumpSeats(1)"
+            >
+              +
+            </button>
+          </div>
+        </div>
+
+        @if (mode() === 'room') {
+          <div class="divider"></div>
+          <div class="cell grow">
+            <span class="field-label">Room Name</span>
+            <input
+              type="text"
+              class="field"
+              placeholder="Sunday EDH Pod"
+              aria-label="room name"
+              [value]="roomName()"
+              (input)="roomName.set($any($event.target).value)"
+            />
+          </div>
+        }
+      </div>
+
+      <div class="row row-deck">
+        <app-deck-picker />
+
+        <button
+          type="button"
+          class="btn btn-primary go"
+          [disabled]="!store.loggedIn()"
+          (click)="submit()"
+        >
+          {{ mode() === 'ai' ? 'Start Match' : 'Create Room' }}
+        </button>
+      </div>
+    </section>
+
+    <aside class="friend panel-feature">
+      <span class="friend-badge" aria-hidden="true">⇢</span>
+      <h2 class="friend-title">Got a Table ID?</h2>
+      <p class="friend-lead">Paste it in and jump straight into a friend's game.</p>
+      <form class="by-id" (submit)="joinById(); $event.preventDefault()">
+        <input
+          id="table-id"
+          type="text"
+          class="field"
+          placeholder="paste a table id"
+          aria-label="table id"
+          [value]="joinTableId()"
+          (input)="joinTableId.set($any($event.target).value)"
+        />
+        <button
+          type="submit"
+          class="btn btn-primary by-id-submit"
+          [disabled]="!store.loggedIn() || !joinTableId().trim()"
+        >
+          Join by ID
+        </button>
+      </form>
+    </aside>
+  </div>
+
+  @if (pendingJoinId()) {
+    <app-join-confirm
+      [deck]="pendingDeck()"
+      (confirm)="confirmJoinById()"
+      (cancel)="cancelJoinById()"
+    />
+  }
+}

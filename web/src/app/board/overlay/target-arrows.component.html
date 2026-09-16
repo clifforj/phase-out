@@ -1,0 +1,45 @@
+<svg aria-hidden="true">
+  <defs>
+    <filter
+      id="arrow-glow"
+      x="-150%"
+      y="-150%"
+      width="400%"
+      height="400%"
+      color-interpolation-filters="sRGB"
+    >
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2.4" result="soft" />
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.008 0.09"
+        numOctaves="3"
+        seed="7"
+        result="noise"
+      />
+
+      <feOffset in="noise" result="drift">
+        <animate attributeName="dx" values="0;90;0" dur="14s" repeatCount="indefinite" />
+      </feOffset>
+      <feColorMatrix in="drift" type="luminanceToAlpha" result="noiseMask" />
+
+      <feComponentTransfer in="noiseMask" result="noiseMaskContrast">
+        <feFuncA type="gamma" amplitude="2.1" exponent="2.2" offset="0.16" />
+      </feComponentTransfer>
+      <feComposite in="soft" in2="noiseMaskContrast" operator="in" result="patchy" />
+      <feColorMatrix
+        in="patchy"
+        type="matrix"
+        values="1 0 0 0 0
+                0 1 0 0 0
+                0 0 1 0 0
+                0 0 0 1.7 0"
+      />
+    </filter>
+  </defs>
+  @for (shape of shapes(); track shape.id) {
+    <g class="arrow" [class.at-player]="shape.kind === 'player'" [attr.transform]="shape.transform">
+      <path class="halo" [attr.d]="shape.shaft" />
+      <path class="shaft" [attr.d]="shape.shaft" />
+    </g>
+  }
+</svg>
